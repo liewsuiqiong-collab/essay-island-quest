@@ -8,3 +8,9 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+## Project rules
+- All persistence goes through `src/lib/store.ts` (localStorage for phase 1); swap its implementation for the cloud backend later so pages stay unchanged.
+- Fixed exercise content lives in `src/lib/content.ts`; feedback is rule-based in `src/lib/feedback.ts` — never present it as AI grading.
+- XP is awarded via `award(key, …)` with a unique key so each exercise counts once (no farming, no public leaderboard).
+- Teacher UI lives under `/teacher` with its own header; keep it separate from student pages.

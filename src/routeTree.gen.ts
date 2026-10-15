@@ -11,8 +11,10 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuditRouteImport } from './routes/audit'
+import { Route as ChallengeRouteImport } from './routes/challenge'
 import { Route as DescribeRouteImport } from './routes/describe'
 import { Route as PlotRouteImport } from './routes/plot'
+import { Route as PortfolioRouteImport } from './routes/portfolio'
 import { Route as WordsRouteImport } from './routes/words'
 
 const IndexRoute = IndexRouteImport.update({
@@ -25,6 +27,11 @@ const AuditRoute = AuditRouteImport.update({
   path: '/audit',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ChallengeRoute = ChallengeRouteImport.update({
+  id: '/challenge',
+  path: '/challenge',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DescribeRoute = DescribeRouteImport.update({
   id: '/describe',
   path: '/describe',
@@ -33,6 +40,11 @@ const DescribeRoute = DescribeRouteImport.update({
 const PlotRoute = PlotRouteImport.update({
   id: '/plot',
   path: '/plot',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PortfolioRoute = PortfolioRouteImport.update({
+  id: '/portfolio',
+  path: '/portfolio',
   getParentRoute: () => rootRouteImport,
 } as any)
 const WordsRoute = WordsRouteImport.update({
@@ -44,38 +56,68 @@ const WordsRoute = WordsRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/audit': typeof AuditRoute
+  '/challenge': typeof ChallengeRoute
   '/describe': typeof DescribeRoute
   '/plot': typeof PlotRoute
+  '/portfolio': typeof PortfolioRoute
   '/words': typeof WordsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/audit': typeof AuditRoute
+  '/challenge': typeof ChallengeRoute
   '/describe': typeof DescribeRoute
   '/plot': typeof PlotRoute
+  '/portfolio': typeof PortfolioRoute
   '/words': typeof WordsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/audit': typeof AuditRoute
+  '/challenge': typeof ChallengeRoute
   '/describe': typeof DescribeRoute
   '/plot': typeof PlotRoute
+  '/portfolio': typeof PortfolioRoute
   '/words': typeof WordsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/audit' | '/describe' | '/plot' | '/words'
+  fullPaths:
+    | '/'
+    | '/audit'
+    | '/challenge'
+    | '/describe'
+    | '/plot'
+    | '/portfolio'
+    | '/words'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/audit' | '/describe' | '/plot' | '/words'
-  id: '__root__' | '/' | '/audit' | '/describe' | '/plot' | '/words'
+  to:
+    | '/'
+    | '/audit'
+    | '/challenge'
+    | '/describe'
+    | '/plot'
+    | '/portfolio'
+    | '/words'
+  id:
+    | '__root__'
+    | '/'
+    | '/audit'
+    | '/challenge'
+    | '/describe'
+    | '/plot'
+    | '/portfolio'
+    | '/words'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuditRoute: typeof AuditRoute
+  ChallengeRoute: typeof ChallengeRoute
   DescribeRoute: typeof DescribeRoute
   PlotRoute: typeof PlotRoute
+  PortfolioRoute: typeof PortfolioRoute
   WordsRoute: typeof WordsRoute
 }
 
@@ -95,6 +137,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuditRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/challenge': {
+      id: '/challenge'
+      path: '/challenge'
+      fullPath: '/challenge'
+      preLoaderRoute: typeof ChallengeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/describe': {
       id: '/describe'
       path: '/describe'
@@ -107,6 +156,13 @@ declare module '@tanstack/react-router' {
       path: '/plot'
       fullPath: '/plot'
       preLoaderRoute: typeof PlotRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/portfolio': {
+      id: '/portfolio'
+      path: '/portfolio'
+      fullPath: '/portfolio'
+      preLoaderRoute: typeof PortfolioRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/words': {
@@ -122,8 +178,10 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuditRoute: AuditRoute,
+  ChallengeRoute: ChallengeRoute,
   DescribeRoute: DescribeRoute,
   PlotRoute: PlotRoute,
+  PortfolioRoute: PortfolioRoute,
   WordsRoute: WordsRoute,
 }
 export const routeTree = rootRouteImport
