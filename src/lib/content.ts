@@ -66,7 +66,7 @@ export const AUDIT_CASES: AuditCase[] = [
   {
     id: "a-embarrass",
     promptId: "p-embarrass",
-    title: BUILTIN_PROMPTS[0].title,
+    title: BUILTIN_PROMPTS[0]!.title,
     steps: [
       {
         q: "请选出题目中的关键词（可多选）",
@@ -139,7 +139,7 @@ export const AUDIT_CASES: AuditCase[] = [
   {
     id: "a-love",
     promptId: "p-love-parents",
-    title: BUILTIN_PROMPTS[1].title,
+    title: BUILTIN_PROMPTS[1]!.title,
     steps: [
       {
         q: "请选出题目关键词（可多选）",

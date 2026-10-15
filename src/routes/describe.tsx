@@ -19,7 +19,7 @@ export const Route = createFileRoute("/describe")({
 
 function DescribePage() {
   const s = useStore();
-  const [cid, setCid] = useState(DESC_CHALLENGES[0].id);
+  const [cid, setCid] = useState(DESC_CHALLENGES[0]!.id);
   const c = DESC_CHALLENGES.find((x) => x.id === cid)!;
   const [text, setText] = useState("");
   const [hints, setHints] = useState(0);

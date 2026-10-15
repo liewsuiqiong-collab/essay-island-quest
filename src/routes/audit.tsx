@@ -17,7 +17,7 @@ export const Route = createFileRoute("/audit")({
 });
 
 function AuditPage() {
-  const [caseId, setCaseId] = useState(AUDIT_CASES[0].id);
+  const [caseId, setCaseId] = useState(AUDIT_CASES[0]!.id);
   const c = AUDIT_CASES.find((x) => x.id === caseId)!;
   return (
     <div>
@@ -62,9 +62,9 @@ function CaseRunner({ c }: { c: AuditCase }) {
           <button className="btn btn-primary mt-4" onClick={() => { setIdx(0); setScore(0); setFinished(false); }}>再挑战一次</button>
         </div>
       ) : idx < c.steps.length ? (
-        <StepQ key={idx} step={c.steps[idx]} id={`${c.id}-s${idx}`} onDone={next} />
+        <StepQ key={idx} step={c.steps[idx]!} id={`${c.id}-s${idx}`} onDone={next} />
       ) : (
-        <JudgeQ key={idx} item={c.judges[idx - c.steps.length]} id={`${c.id}-j${idx}`} n={idx - c.steps.length + 1} onDone={next} />
+        <JudgeQ key={idx} item={c.judges[idx - c.steps.length]!} id={`${c.id}-j${idx}`} n={idx - c.steps.length + 1} onDone={next} />
       )}
     </div>
   );

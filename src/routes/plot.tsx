@@ -17,7 +17,7 @@ export const Route = createFileRoute("/plot")({
   component: PlotPage,
 });
 
-const blank = (): PlotPlan => ({ id: uid(), title: BUILTIN_PROMPTS[0].title, mode: "narrative", fields: {}, updatedAt: now() });
+const blank = (): PlotPlan => ({ id: uid(), title: BUILTIN_PROMPTS[0]!.title, mode: "narrative", fields: {}, updatedAt: now() });
 
 function PlotPage() {
   const s = useStore();

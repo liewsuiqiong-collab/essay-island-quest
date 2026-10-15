@@ -7,7 +7,7 @@ import { changedChars, essayHints } from "@/lib/feedback";
 import { award, countChars, fmtDate, giveBadge, now, uid, upsertEssay, useStore, type Essay } from "@/lib/store";
 
 export const Route = createFileRoute("/challenge")({
-  validateSearch: (s: Record<string, unknown>): { essay?: string } => (typeof s.essay === "string" ? { essay: s.essay } : {}),
+  validateSearch: (s: Record<string, unknown>): { essay?: string } => (typeof s["essay"] === "string" ? { essay: s["essay"] } : {}),
   head: () => ({
     meta: [
       { title: "作文挑战赛 · 作文冒险岛" },
