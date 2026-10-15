@@ -150,7 +150,7 @@ function Home() {
 function Stat({ n, l }: { n: string | number; l: string }) {
   return (
     <div className="rounded-xl bg-muted p-2">
-      <div className="font-display text-xl text-primary">{n}</div>
+      <div className="text-xl font-bold text-primary">{n}</div>
       <div className="text-[11px] text-muted-foreground">{l}</div>
     </div>
   );
