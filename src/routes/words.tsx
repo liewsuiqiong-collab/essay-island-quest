@@ -53,7 +53,7 @@ function Quiz() {
   const [tries, setTries] = useState(0);
   const [score, setScore] = useState(0);
   const [done, setDone] = useState(false);
-  const q = WORD_QUIZZES[i];
+  const q = WORD_QUIZZES[i]!;
   const ok = pick === q?.answer;
 
   const choose = (k: number) => {
@@ -98,7 +98,7 @@ function Quiz() {
 }
 
 function Make() {
-  const [w, setW] = useState(SENTENCE_TASKS[0]);
+  const [w, setW] = useState<string>(SENTENCE_TASKS[0]!);
   const [s, setS] = useState("");
   const [r, setR] = useState<ReturnType<typeof checkSentence> | null>(null);
   return (

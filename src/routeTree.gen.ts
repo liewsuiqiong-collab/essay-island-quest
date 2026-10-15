@@ -15,6 +15,7 @@ import { Route as ChallengeRouteImport } from './routes/challenge'
 import { Route as DescribeRouteImport } from './routes/describe'
 import { Route as PlotRouteImport } from './routes/plot'
 import { Route as PortfolioRouteImport } from './routes/portfolio'
+import { Route as TeacherRouteImport } from './routes/teacher'
 import { Route as WordsRouteImport } from './routes/words'
 
 const IndexRoute = IndexRouteImport.update({
@@ -47,6 +48,11 @@ const PortfolioRoute = PortfolioRouteImport.update({
   path: '/portfolio',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TeacherRoute = TeacherRouteImport.update({
+  id: '/teacher',
+  path: '/teacher',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const WordsRoute = WordsRouteImport.update({
   id: '/words',
   path: '/words',
@@ -60,6 +66,7 @@ export interface FileRoutesByFullPath {
   '/describe': typeof DescribeRoute
   '/plot': typeof PlotRoute
   '/portfolio': typeof PortfolioRoute
+  '/teacher': typeof TeacherRoute
   '/words': typeof WordsRoute
 }
 export interface FileRoutesByTo {
@@ -69,6 +76,7 @@ export interface FileRoutesByTo {
   '/describe': typeof DescribeRoute
   '/plot': typeof PlotRoute
   '/portfolio': typeof PortfolioRoute
+  '/teacher': typeof TeacherRoute
   '/words': typeof WordsRoute
 }
 export interface FileRoutesById {
@@ -79,6 +87,7 @@ export interface FileRoutesById {
   '/describe': typeof DescribeRoute
   '/plot': typeof PlotRoute
   '/portfolio': typeof PortfolioRoute
+  '/teacher': typeof TeacherRoute
   '/words': typeof WordsRoute
 }
 export interface FileRouteTypes {
@@ -90,6 +99,7 @@ export interface FileRouteTypes {
     | '/describe'
     | '/plot'
     | '/portfolio'
+    | '/teacher'
     | '/words'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -99,6 +109,7 @@ export interface FileRouteTypes {
     | '/describe'
     | '/plot'
     | '/portfolio'
+    | '/teacher'
     | '/words'
   id:
     | '__root__'
@@ -108,6 +119,7 @@ export interface FileRouteTypes {
     | '/describe'
     | '/plot'
     | '/portfolio'
+    | '/teacher'
     | '/words'
   fileRoutesById: FileRoutesById
 }
@@ -118,6 +130,7 @@ export interface RootRouteChildren {
   DescribeRoute: typeof DescribeRoute
   PlotRoute: typeof PlotRoute
   PortfolioRoute: typeof PortfolioRoute
+  TeacherRoute: typeof TeacherRoute
   WordsRoute: typeof WordsRoute
 }
 
@@ -165,6 +178,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PortfolioRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/teacher': {
+      id: '/teacher'
+      path: '/teacher'
+      fullPath: '/teacher'
+      preLoaderRoute: typeof TeacherRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/words': {
       id: '/words'
       path: '/words'
@@ -182,6 +202,7 @@ const rootRouteChildren: RootRouteChildren = {
   DescribeRoute: DescribeRoute,
   PlotRoute: PlotRoute,
   PortfolioRoute: PortfolioRoute,
+  TeacherRoute: TeacherRoute,
   WordsRoute: WordsRoute,
 }
 export const routeTree = rootRouteImport
