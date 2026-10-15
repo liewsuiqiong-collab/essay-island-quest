@@ -10,33 +10,128 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuditRouteImport } from './routes/audit'
+import { Route as ChallengeRouteImport } from './routes/challenge'
+import { Route as DescribeRouteImport } from './routes/describe'
+import { Route as PlotRouteImport } from './routes/plot'
+import { Route as PortfolioRouteImport } from './routes/portfolio'
+import { Route as TeacherRouteImport } from './routes/teacher'
+import { Route as WordsRouteImport } from './routes/words'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuditRoute = AuditRouteImport.update({
+  id: '/audit',
+  path: '/audit',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ChallengeRoute = ChallengeRouteImport.update({
+  id: '/challenge',
+  path: '/challenge',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DescribeRoute = DescribeRouteImport.update({
+  id: '/describe',
+  path: '/describe',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlotRoute = PlotRouteImport.update({
+  id: '/plot',
+  path: '/plot',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PortfolioRoute = PortfolioRouteImport.update({
+  id: '/portfolio',
+  path: '/portfolio',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TeacherRoute = TeacherRouteImport.update({
+  id: '/teacher',
+  path: '/teacher',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WordsRoute = WordsRouteImport.update({
+  id: '/words',
+  path: '/words',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/audit': typeof AuditRoute
+  '/challenge': typeof ChallengeRoute
+  '/describe': typeof DescribeRoute
+  '/plot': typeof PlotRoute
+  '/portfolio': typeof PortfolioRoute
+  '/teacher': typeof TeacherRoute
+  '/words': typeof WordsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/audit': typeof AuditRoute
+  '/challenge': typeof ChallengeRoute
+  '/describe': typeof DescribeRoute
+  '/plot': typeof PlotRoute
+  '/portfolio': typeof PortfolioRoute
+  '/teacher': typeof TeacherRoute
+  '/words': typeof WordsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/audit': typeof AuditRoute
+  '/challenge': typeof ChallengeRoute
+  '/describe': typeof DescribeRoute
+  '/plot': typeof PlotRoute
+  '/portfolio': typeof PortfolioRoute
+  '/teacher': typeof TeacherRoute
+  '/words': typeof WordsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/audit'
+    | '/challenge'
+    | '/describe'
+    | '/plot'
+    | '/portfolio'
+    | '/teacher'
+    | '/words'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/audit'
+    | '/challenge'
+    | '/describe'
+    | '/plot'
+    | '/portfolio'
+    | '/teacher'
+    | '/words'
+  id:
+    | '__root__'
+    | '/'
+    | '/audit'
+    | '/challenge'
+    | '/describe'
+    | '/plot'
+    | '/portfolio'
+    | '/teacher'
+    | '/words'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuditRoute: typeof AuditRoute
+  ChallengeRoute: typeof ChallengeRoute
+  DescribeRoute: typeof DescribeRoute
+  PlotRoute: typeof PlotRoute
+  PortfolioRoute: typeof PortfolioRoute
+  TeacherRoute: typeof TeacherRoute
+  WordsRoute: typeof WordsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +143,67 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/audit': {
+      id: '/audit'
+      path: '/audit'
+      fullPath: '/audit'
+      preLoaderRoute: typeof AuditRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/challenge': {
+      id: '/challenge'
+      path: '/challenge'
+      fullPath: '/challenge'
+      preLoaderRoute: typeof ChallengeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/describe': {
+      id: '/describe'
+      path: '/describe'
+      fullPath: '/describe'
+      preLoaderRoute: typeof DescribeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/plot': {
+      id: '/plot'
+      path: '/plot'
+      fullPath: '/plot'
+      preLoaderRoute: typeof PlotRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/portfolio': {
+      id: '/portfolio'
+      path: '/portfolio'
+      fullPath: '/portfolio'
+      preLoaderRoute: typeof PortfolioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/teacher': {
+      id: '/teacher'
+      path: '/teacher'
+      fullPath: '/teacher'
+      preLoaderRoute: typeof TeacherRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/words': {
+      id: '/words'
+      path: '/words'
+      fullPath: '/words'
+      preLoaderRoute: typeof WordsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuditRoute: AuditRoute,
+  ChallengeRoute: ChallengeRoute,
+  DescribeRoute: DescribeRoute,
+  PlotRoute: PlotRoute,
+  PortfolioRoute: PortfolioRoute,
+  TeacherRoute: TeacherRoute,
+  WordsRoute: WordsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
