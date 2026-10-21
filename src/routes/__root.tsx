@@ -81,7 +81,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "作文冒险岛 · 游戏化华文作文学习" },
-      { name: "description", content: "面向新加坡中二快捷与高级华文学生的游戏化作文练习平台。" },
+      { name: "description", content: "面向新加坡中二快捷华文学生的游戏化作文练习平台。" },
       { property: "og:title", content: "作文冒险岛" },
       { property: "og:description", content: "审题、构思、描写、词句与作文挑战，一站式闯关练写作。" },
       { property: "og:type", content: "website" },
