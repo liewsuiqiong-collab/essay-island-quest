@@ -19,7 +19,7 @@ const ART: Record<string, { image: string; theme: string }> = {
 
 export function AdventureMap({ player }: { player: State }) {
   return <section className="adventure-map" aria-label="五座冒险岛屿">
-    <div className="map-heading"><Compass size={21} /><h2>你的冒险地图</h2><span>五座岛屿 · 约 90 分钟 · 总分 100</span></div>
+    <div className="map-heading"><Compass size={21} /><h2>你的冒险地图</h2><span>五座岛屿 · 建议按顺序挑战 · 总分 100</span></div>
     <div className="island-grid">
       <svg className="adventure-trail" viewBox="0 0 1100 370" preserveAspectRatio="none" aria-hidden="true"><path d="M 90 225 C 165 330 200 75 310 120 S 420 320 530 225 S 640 40 750 110 S 880 320 1010 180" /></svg>
       {STATIONS.map((st, index) => {

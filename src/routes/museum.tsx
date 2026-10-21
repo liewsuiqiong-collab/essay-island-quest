@@ -39,16 +39,7 @@ function MuseumPage() {
       </div>
       <div className="card mb-4 rounded-xl bg-muted p-4 text-[15px] leading-relaxed">📜 <strong>{prompt.label}：</strong>{prompt.title}</div>
 
-      {!unlocked ? (
-        <div className="card p-8 text-center">
-          <div className="text-5xl">🔒</div>
-          <h3 className="mt-3 text-2xl">先写自己的作文，才能解锁范文</h3>
-          <p className="mx-auto mt-2 max-w-md text-sm text-muted-foreground">
-            请先到「作文终极挑战」选择{prompt.label ? ` ${prompt.label} ` : "这道"}题，完成初稿并通过自我检查。这样做是先形成自己的想法，再借鉴别人的写法，而不是照抄。
-          </p>
-          <Link to="/challenge" className="btn btn-primary mt-4 inline-block">去写作文 ✍️</Link>
-        </div>
-      ) : saved && !redo ? (
+      {saved && !redo ? (
         <div className="card p-6">
           <h3 className="text-xl">🎓 本题学习任务已完成</h3>
           <div className="mt-3 grid gap-2 text-sm sm:grid-cols-3">
