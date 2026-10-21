@@ -1,10 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Feedback, LocalNotice, PageHead, Progress } from "@/components/kit";
-import { PlanBoard } from "@/components/PlanBoard";
-import { BUILTIN_PROMPTS, CHALLENGE_PROMPTS, CHECKLISTS, MODEL_ESSAYS, type EssayPrompt } from "@/lib/content";
+import { BUILTIN_PROMPTS, CHALLENGE_PLAN_FIELDS, CHALLENGE_PROMPTS, CHECKLISTS, type EssayPrompt } from "@/lib/content";
 import { changedChars, essayHints } from "@/lib/feedback";
-import { award, countChars, fmtDate, giveBadge, now, uid, upsertEssay, useStore, type Essay } from "@/lib/store";
+import { challengeScore } from "@/lib/scores";
+import { award, countChars, fmtDate, giveBadge, now, setStationScore, uid, upsertEssay, useStore, type Essay } from "@/lib/store";
 
 export const Route = createFileRoute("/challenge")({
   validateSearch: (s: Record<string, unknown>): { essay?: string } => (typeof s["essay"] === "string" ? { essay: s["essay"] } : {}),
@@ -27,7 +27,7 @@ function ChallengePage() {
   const s = useStore();
   const { essay: essayId } = Route.useSearch();
   const navigate = Route.useNavigate();
-  const prompts = [...CHALLENGE_PROMPTS, ...s.customPrompts];
+  const prompts = CHALLENGE_PROMPTS;
   const current = s.essays.find((e) => e.id === essayId);
 
   if (current) return <Editor key={current.id} initial={current} onBack={() => navigate({ search: {} })} />;
@@ -46,7 +46,7 @@ function ChallengePage() {
               {p.custom && <span className="rounded-full bg-sun-soft px-2 py-0.5">老师新增</span>}
             </div>
             <p className="mt-3 flex-1 leading-relaxed">{p.title}</p>
-            {(MODEL_ESSAYS[p.id]?.length ?? 0) > 0 && <p className="mt-2 text-xs text-muted-foreground">📖 提交初稿后可查看 {MODEL_ESSAYS[p.id]?.length} 篇参考范文</p>}
+            <p className="mt-2 text-xs text-muted-foreground">📖 提交初稿并完成自我检查后，可到「范文学习馆」解锁本题范文</p>
             <button className="btn btn-primary mt-4" onClick={() => { const e = newEssay(p); upsertEssay(e); navigate({ search: { essay: e.id } }); }}>开始挑战</button>
           </div>
         ))}

@@ -13,8 +13,10 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuditRouteImport } from './routes/audit'
 import { Route as ChallengeRouteImport } from './routes/challenge'
 import { Route as DescribeRouteImport } from './routes/describe'
+import { Route as MuseumRouteImport } from './routes/museum'
 import { Route as PlotRouteImport } from './routes/plot'
 import { Route as PortfolioRouteImport } from './routes/portfolio'
+import { Route as ReportRouteImport } from './routes/report'
 import { Route as TeacherRouteImport } from './routes/teacher'
 import { Route as WordsRouteImport } from './routes/words'
 
@@ -38,6 +40,11 @@ const DescribeRoute = DescribeRouteImport.update({
   path: '/describe',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MuseumRoute = MuseumRouteImport.update({
+  id: '/museum',
+  path: '/museum',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PlotRoute = PlotRouteImport.update({
   id: '/plot',
   path: '/plot',
@@ -46,6 +53,11 @@ const PlotRoute = PlotRouteImport.update({
 const PortfolioRoute = PortfolioRouteImport.update({
   id: '/portfolio',
   path: '/portfolio',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReportRoute = ReportRouteImport.update({
+  id: '/report',
+  path: '/report',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TeacherRoute = TeacherRouteImport.update({
@@ -64,8 +76,10 @@ export interface FileRoutesByFullPath {
   '/audit': typeof AuditRoute
   '/challenge': typeof ChallengeRoute
   '/describe': typeof DescribeRoute
+  '/museum': typeof MuseumRoute
   '/plot': typeof PlotRoute
   '/portfolio': typeof PortfolioRoute
+  '/report': typeof ReportRoute
   '/teacher': typeof TeacherRoute
   '/words': typeof WordsRoute
 }
@@ -74,8 +88,10 @@ export interface FileRoutesByTo {
   '/audit': typeof AuditRoute
   '/challenge': typeof ChallengeRoute
   '/describe': typeof DescribeRoute
+  '/museum': typeof MuseumRoute
   '/plot': typeof PlotRoute
   '/portfolio': typeof PortfolioRoute
+  '/report': typeof ReportRoute
   '/teacher': typeof TeacherRoute
   '/words': typeof WordsRoute
 }
@@ -85,8 +101,10 @@ export interface FileRoutesById {
   '/audit': typeof AuditRoute
   '/challenge': typeof ChallengeRoute
   '/describe': typeof DescribeRoute
+  '/museum': typeof MuseumRoute
   '/plot': typeof PlotRoute
   '/portfolio': typeof PortfolioRoute
+  '/report': typeof ReportRoute
   '/teacher': typeof TeacherRoute
   '/words': typeof WordsRoute
 }
@@ -97,8 +115,10 @@ export interface FileRouteTypes {
     | '/audit'
     | '/challenge'
     | '/describe'
+    | '/museum'
     | '/plot'
     | '/portfolio'
+    | '/report'
     | '/teacher'
     | '/words'
   fileRoutesByTo: FileRoutesByTo
@@ -107,8 +127,10 @@ export interface FileRouteTypes {
     | '/audit'
     | '/challenge'
     | '/describe'
+    | '/museum'
     | '/plot'
     | '/portfolio'
+    | '/report'
     | '/teacher'
     | '/words'
   id:
@@ -117,8 +139,10 @@ export interface FileRouteTypes {
     | '/audit'
     | '/challenge'
     | '/describe'
+    | '/museum'
     | '/plot'
     | '/portfolio'
+    | '/report'
     | '/teacher'
     | '/words'
   fileRoutesById: FileRoutesById
@@ -128,8 +152,10 @@ export interface RootRouteChildren {
   AuditRoute: typeof AuditRoute
   ChallengeRoute: typeof ChallengeRoute
   DescribeRoute: typeof DescribeRoute
+  MuseumRoute: typeof MuseumRoute
   PlotRoute: typeof PlotRoute
   PortfolioRoute: typeof PortfolioRoute
+  ReportRoute: typeof ReportRoute
   TeacherRoute: typeof TeacherRoute
   WordsRoute: typeof WordsRoute
 }
@@ -164,6 +190,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DescribeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/museum': {
+      id: '/museum'
+      path: '/museum'
+      fullPath: '/museum'
+      preLoaderRoute: typeof MuseumRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/plot': {
       id: '/plot'
       path: '/plot'
@@ -176,6 +209,13 @@ declare module '@tanstack/react-router' {
       path: '/portfolio'
       fullPath: '/portfolio'
       preLoaderRoute: typeof PortfolioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/report': {
+      id: '/report'
+      path: '/report'
+      fullPath: '/report'
+      preLoaderRoute: typeof ReportRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/teacher': {
@@ -200,8 +240,10 @@ const rootRouteChildren: RootRouteChildren = {
   AuditRoute: AuditRoute,
   ChallengeRoute: ChallengeRoute,
   DescribeRoute: DescribeRoute,
+  MuseumRoute: MuseumRoute,
   PlotRoute: PlotRoute,
   PortfolioRoute: PortfolioRoute,
+  ReportRoute: ReportRoute,
   TeacherRoute: TeacherRoute,
   WordsRoute: WordsRoute,
 }
