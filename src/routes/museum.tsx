@@ -24,8 +24,6 @@ function MuseumPage() {
     return CHALLENGE_PROMPTS[0]!.id;
   });
   const prompt = CHALLENGE_PROMPTS.find((p) => p.id === pid)!;
-  const task = MUSEUM_TASKS[pid]!;
-  const unlocked = true;
   const saved = s.museumResults[pid];
   const [redo, setRedo] = useState(false);
 

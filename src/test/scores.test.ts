@@ -60,18 +60,13 @@ describe("星星与总分", () => {
   });
 });
 
-describe("解锁规则", () => {
+describe("自由进入（不设解锁限制）", () => {
   const st = (scores: Record<string, number>) => ({ scores }) as unknown as State;
-  it("第一站始终解锁，其余需完成前一站", () => {
-    expect(stationUnlocked(st({}), "audit")).toBe(true);
-    expect(stationUnlocked(st({}), "words")).toBe(false);
-    expect(stationUnlocked(st({ audit: 20 }), "words")).toBe(true);
-    expect(stationUnlocked(st({ audit: 20 }), "describe")).toBe(false);
-  });
-  it("先读范文：完成句子升级站后开放学习馆，学习馆完成后才开放终极挑战", () => {
-    expect(stationUnlocked(st({ audit: 20, words: 20, describe: 20 }), "museum")).toBe(true);
-    expect(stationUnlocked(st({ audit: 20, words: 20, describe: 20 }), "challenge")).toBe(false);
-    expect(stationUnlocked(st({ audit: 20, words: 20, describe: 20, museum: 12 }), "challenge")).toBe(true);
+  it("任何站都随时可进入，包括范文学习馆与终极挑战", () => {
+    for (const station of STATIONS) {
+      expect(stationUnlocked(st({}), station.id)).toBe(true);
+      expect(stationUnlocked(st({ audit: 20 }), station.id)).toBe(true);
+    }
   });
 });
 
