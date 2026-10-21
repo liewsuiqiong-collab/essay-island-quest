@@ -18,3 +18,4 @@
 - The homepage adventure scene uses separate imported artwork and interactive island components; existing exercise routes stay intact so presentation changes do not replace learning logic.
 - Prebundle shared UI dependencies in Vite's optimizeDeps while preserving the template's React deduplication; late dependency discovery can mix React module generations during preview updates.
 - GitHub Pages builds use `npm run build:pages` (sets GITHUB_PAGES=1 for the /essay-island-quest/ base and router basepath, then copies the shell to index.html/404.html); the default build and Lovable preview stay at root.
+- GitHub Actions installs with pinned Bun and `bun install --frozen-lockfile`, then runs `bun run build:pages`; keep `bun.lock` authoritative because npm has no compatible lockfile here and fresh npm resolution crashes in Arborist.
