@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Feedback, PageHead, Progress } from "@/components/kit";
 import { AUDIT_CASES, type AuditCase } from "@/lib/content";
-import { award, giveBadge, recordWrong } from "@/lib/store";
+import { award, giveBadge, recordWrong, setStationScore } from "@/lib/store";
 
 export const Route = createFileRoute("/audit")({
   head: () => ({
@@ -39,9 +39,11 @@ function CaseRunner({ c }: { c: AuditCase }) {
   const [finished, setFinished] = useState(false);
 
   const next = (firstTry: boolean) => {
-    if (firstTry) setScore((s) => s + 1);
+    const newScore = score + (firstTry ? 1 : 0);
+    if (firstTry) setScore(newScore);
     if (idx + 1 >= total) {
       setFinished(true);
+      setStationScore("audit", (newScore / total) * 20);
       award(`audit-${c.id}`, 40, `审题侦探：完成「${c.id === "a-embarrass" ? "比赛尴尬事" : "表达爱"}」案件`, "审题");
       giveBadge("audit");
     } else setIdx(idx + 1);
@@ -58,7 +60,7 @@ function CaseRunner({ c }: { c: AuditCase }) {
         <div className="py-8 text-center">
           <div className="text-5xl">🕵️</div>
           <h3 className="mt-3 text-2xl">案件破解！</h3>
-          <p className="mt-2 text-muted-foreground">一次答对 {score}/{total} 题。首次完成可获得 40 XP 与「审题侦探」徽章。</p>
+          <p className="mt-2 text-muted-foreground">一次答对 {score}/{total} 题，本站得分 {Math.round((score / total) * 20)}/20（按一次答对题数计分）。首次完成可获得 40 XP 与「审题侦探」徽章。</p>
           <button className="btn btn-primary mt-4" onClick={() => { setIdx(0); setScore(0); setFinished(false); }}>再挑战一次</button>
         </div>
       ) : idx < c.steps.length ? (

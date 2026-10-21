@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Feedback, PageHead } from "@/components/kit";
 import { DESC_CHALLENGES } from "@/lib/content";
 import { analyzeDescription } from "@/lib/feedback";
-import { addDesc, award, fmtDate, giveBadge, now, uid, useStore } from "@/lib/store";
+import { addDesc, award, fmtDate, giveBadge, now, setStationScore, uid, useStore } from "@/lib/store";
 
 export const Route = createFileRoute("/describe")({
   head: () => ({
@@ -34,6 +34,7 @@ function DescribePage() {
     addDesc({ id: uid(), challengeId: c.id, original: c.original, rewrite: text, skills: result.found, date: now() });
     award(`desc-${c.id}`, 25, `描写魔法师：改写「${c.original}」`, "描写");
     const doneCount = new Set([...s.descs.map((d) => d.challengeId), c.id]).size;
+    setStationScore("describe", (doneCount / DESC_CHALLENGES.length) * 20);
     if (doneCount >= 2) giveBadge("describe");
     setSaved(true);
   };

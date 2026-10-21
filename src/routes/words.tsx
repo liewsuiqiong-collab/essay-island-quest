@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Feedback, PageHead, Progress } from "@/components/kit";
 import { SENTENCE_TASKS, WORD_BANK, WORD_QUIZZES } from "@/lib/content";
 import { checkSentence } from "@/lib/feedback";
-import { award, giveBadge, recordWrong } from "@/lib/store";
+import { award, giveBadge, recordWrong, setStationScore } from "@/lib/store";
 
 export const Route = createFileRoute("/words")({
   head: () => ({
@@ -66,6 +66,7 @@ function Quiz() {
   const next = () => {
     if (i + 1 >= WORD_QUIZZES.length) {
       setDone(true);
+      setStationScore("words", (score / WORD_QUIZZES.length) * 20);
       award("words-quiz", 30, "词句工坊：完成一轮测验", "词句");
       if (score >= 6) giveBadge("words");
     } else { setI(i + 1); setPick(null); setTries(0); }
@@ -75,7 +76,7 @@ function Quiz() {
     return (
       <div className="card p-8 text-center">
         <div className="text-5xl">🧩</div>
-        <h3 className="mt-2 text-2xl">一次答对 {score}/{WORD_QUIZZES.length}</h3>
+        <h3 className="mt-2 text-2xl">一次答对 {score}/{WORD_QUIZZES.length}，本站得分 {Math.round((score / WORD_QUIZZES.length) * 20)}/20</h3>
         <p className="mt-2 text-sm text-muted-foreground">{score >= 6 ? "太棒了，获得「词句工匠」徽章！" : "一次答对 6 题以上可获得「词句工匠」徽章，再试一次吧。"}</p>
         <button className="btn btn-primary mt-4" onClick={() => { setI(0); setPick(null); setTries(0); setScore(0); setDone(false); }}>重新挑战</button>
       </div>

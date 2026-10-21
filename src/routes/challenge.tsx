@@ -1,10 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Feedback, LocalNotice, PageHead, Progress } from "@/components/kit";
-import { PlanBoard } from "@/components/PlanBoard";
-import { BUILTIN_PROMPTS, CHALLENGE_PROMPTS, CHECKLISTS, MODEL_ESSAYS, type EssayPrompt } from "@/lib/content";
+import { BUILTIN_PROMPTS, CHALLENGE_PLAN_FIELDS, CHALLENGE_PROMPTS, CHECKLISTS, type EssayPrompt } from "@/lib/content";
 import { changedChars, essayHints } from "@/lib/feedback";
-import { award, countChars, fmtDate, giveBadge, now, uid, upsertEssay, useStore, type Essay } from "@/lib/store";
+import { challengeScore } from "@/lib/scores";
+import { award, countChars, fmtDate, giveBadge, now, setStationScore, uid, upsertEssay, useStore, type Essay } from "@/lib/store";
 
 export const Route = createFileRoute("/challenge")({
   validateSearch: (s: Record<string, unknown>): { essay?: string } => (typeof s["essay"] === "string" ? { essay: s["essay"] } : {}),
@@ -27,14 +27,15 @@ function ChallengePage() {
   const s = useStore();
   const { essay: essayId } = Route.useSearch();
   const navigate = Route.useNavigate();
-  const prompts = [...CHALLENGE_PROMPTS, ...s.customPrompts];
+  const prompts = CHALLENGE_PROMPTS;
   const current = s.essays.find((e) => e.id === essayId);
 
   if (current) return <Editor key={current.id} initial={current} onBack={() => navigate({ search: {} })} />;
 
   return (
     <div>
-      <PageHead icon="🏆" title="作文挑战赛" desc="独立完成一篇作文：审题 → 构思 → 初稿 → 自查 → 修改 → 反思。" />
+      <PageHead icon="🏆" title="作文终极挑战" desc="独立完成一篇作文：审题 → 构思 → 初稿 → 自查 → 修改 → 反思。按完成度计分，满分 20 分。" />
+      <Feedback kind="info">💾 草稿会自动保存在这台设备的浏览器里；刷新或换设备可能丢失进度。写完后请到「学习报告」生成 PDF，再自行上传到 Google Classroom 提交。</Feedback>
       <h2 className="mb-3 text-xl">选择题目开始</h2>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {prompts.map((p) => (
@@ -46,7 +47,7 @@ function ChallengePage() {
               {p.custom && <span className="rounded-full bg-sun-soft px-2 py-0.5">老师新增</span>}
             </div>
             <p className="mt-3 flex-1 leading-relaxed">{p.title}</p>
-            {(MODEL_ESSAYS[p.id]?.length ?? 0) > 0 && <p className="mt-2 text-xs text-muted-foreground">📖 提交初稿后可查看 {MODEL_ESSAYS[p.id]?.length} 篇参考范文</p>}
+            <p className="mt-2 text-xs text-muted-foreground">📖 提交初稿并完成自我检查后，可到「范文学习馆」解锁本题范文</p>
             <button className="btn btn-primary mt-4" onClick={() => { const e = newEssay(p); upsertEssay(e); navigate({ search: { essay: e.id } }); }}>开始挑战</button>
           </div>
         ))}
@@ -94,6 +95,7 @@ function Editor({ initial, onBack }: { initial: Essay; onBack: () => void }) {
     if (e.checklist.length < CHECKLISTS[e.type].length) return setMsg({ k: "hint", t: "请先完成自查清单中的每一项（如实勾选，没做到的回去修改）。" });
     const next = { ...e, status: "初稿已提交" as const, revision: e.revision || e.draft };
     setE(next); upsertEssay(next);
+    setStationScore("challenge", challengeScore(next).total);
     award(`essay-draft-${e.id}`, 40, "作文挑战：提交初稿", "构思");
     giveBadge("challenge");
     setMsg({ k: "ok", t: "初稿已提交！+40 XP。初稿已锁定保留，接下来在「修改稿」中修改。" });
@@ -106,6 +108,7 @@ function Editor({ initial, onBack }: { initial: Essay; onBack: () => void }) {
     if (diff < need) return setMsg({ k: "hint", t: `修改稿与初稿只差约 ${diff} 个字。认真修改（至少改动约 ${need} 字）才能获得修改 XP，试着加强高潮描写或修正结构。` });
     const next = { ...e, status: "修改稿已提交" as const };
     setE(next); upsertEssay(next);
+    setStationScore("challenge", challengeScore(next).total);
     award(`essay-rev-${e.id}`, 50, "作文挑战：认真修改并提交修改稿", "修改");
     giveBadge("reviser");
     setMsg({ k: "ok", t: `修改稿已提交！改动约 ${diff} 字，+50 XP，获得「认真修改家」徽章。` });
@@ -115,6 +118,7 @@ function Editor({ initial, onBack }: { initial: Essay; onBack: () => void }) {
     const n = countChars(e.reflection);
     if (n < 30) return setMsg({ k: "hint", t: `反思目前 ${n} 字，请至少写 30 字：你改了什么？为什么？下次要注意什么？` });
     upsertEssay(e);
+    setStationScore("challenge", challengeScore(e).total);
     award(`essay-ref-${e.id}`, 20, "作文挑战：完成自我反思", "修改");
     giveBadge("reflector");
     setMsg({ k: "ok", t: "反思已保存！+20 XP。可以到「我的成长作品集」查看完整记录。" });
@@ -152,9 +156,16 @@ function Editor({ initial, onBack }: { initial: Essay; onBack: () => void }) {
 
         {step === 1 && (
           <div className="space-y-3">
-            <h3 className="text-xl">第二步：构思 {e.type === "opinion" ? "（PEEL：观点、解释、例子、联系）" : "（开端→发展→高潮→结局→反思）"}</h3>
-            <PlanBoard mode={e.type === "opinion" ? "peel" : "narrative"} value={e.plan} onChange={(plan) => up({ plan })} />
-            {e.type === "opinion" && <p className="text-xs text-muted-foreground">PEEL 适用于每个主体段。有两个理由时，可在每格分别写「理由一 / 理由二」。</p>}
+            <h3 className="text-xl">第二步：内容规划</h3>
+            <div className="grid gap-3 sm:grid-cols-2">
+              {CHALLENGE_PLAN_FIELDS.map((f) => (
+                <label key={f.key} className="block rounded-xl border p-3 text-sm">
+                  <strong>{f.label}</strong>
+                  <span className="mt-0.5 block text-xs text-muted-foreground">{f.q}</span>
+                  <textarea className="field mt-2 min-h-20" value={e.plan[f.key] ?? ""} onChange={(ev) => up({ plan: { ...e.plan, [f.key]: ev.target.value } })} />
+                </label>
+              ))}
+            </div>
             <div className="flex gap-2"><button className="btn btn-ghost" onClick={() => save("构思已保存。")}>保存构思</button><button className="btn btn-primary" onClick={() => go(2)}>开始写作 →</button></div>
           </div>
         )}
@@ -195,7 +206,8 @@ function Editor({ initial, onBack }: { initial: Essay; onBack: () => void }) {
                 </div>
                 {hints.length > 0 && <Feedback kind="hint"><div className="mb-1 font-semibold">修改方向（规则式提醒）：</div><ul className="list-disc pl-4">{hints.map((t) => <li key={t}>{t}</li>)}</ul></Feedback>}
                 <div className="flex flex-wrap gap-2"><button className="btn btn-ghost" onClick={() => save("修改稿已保存。")}>💾 保存修改稿</button><button className="btn btn-sun" onClick={submitRevision}>📤 提交修改稿</button><button className="btn btn-primary" onClick={() => go(5)}>写反思 →</button></div>
-                <ModelEssays promptId={e.promptId} />
+                <Feedback kind="info">📖 想看看别的同学怎么写这道题？到「范文学习馆」读范文、完成三组学习任务（学方法，不照抄）。</Feedback>
+                <Link to="/museum" className="btn btn-ghost">去范文学习馆 →</Link>
               </>
             )}
           </div>
@@ -206,33 +218,21 @@ function Editor({ initial, onBack }: { initial: Essay; onBack: () => void }) {
             <h3 className="text-xl">第六步：自我反思</h3>
             <ul className="list-disc pl-5 text-sm text-muted-foreground"><li>这次我主要修改了哪里？为什么？</li><li>我觉得写得最好的一段是哪段？</li><li>下次写作我要特别注意什么？</li></ul>
             <textarea className="field min-h-40" value={e.reflection} onChange={(ev) => up({ reflection: ev.target.value })} />
-            <div className="flex gap-2"><button className="btn btn-sun" onClick={submitReflection}>保存反思</button><Link to="/portfolio" className="btn btn-ghost">查看作品集</Link></div>
-            <ModelEssays promptId={e.promptId} />
+            <div className="flex flex-wrap gap-2"><button className="btn btn-sun" onClick={submitReflection}>保存反思</button><Link to="/museum" className="btn btn-ghost">去范文学习馆</Link><Link to="/report" className="btn btn-primary">生成学习报告（PDF）→</Link></div>
+            <div className="rounded-xl border p-4">
+              <h4 className="font-semibold">本站计分（满分 20，只看完成度，不评判作文质量）</h4>
+              <ul className="mt-2 space-y-1 text-sm">
+                {challengeScore(e).rows.map((r) => (
+                  <li key={r.label} className={r.points ? "text-success" : "text-muted-foreground"}>{r.points ? "☑" : "☐"} {r.label} — {r.points}/{r.max} 分</li>
+                ))}
+              </ul>
+              <p className="mt-2 font-semibold">目前本站得分：{challengeScore(e).total}/20</p>
+            </div>
           </div>
         )}
         {msg && <Feedback kind={msg.k}>{msg.t}</Feedback>}
       </div>
       <div className="mt-4"><LocalNotice /></div>
-    </div>
-  );
-}
-
-/* 提交初稿后解锁的参考范文：供修改稿与反思阶段对照学习 */
-function ModelEssays({ promptId }: { promptId: string }) {
-  const essays = MODEL_ESSAYS[promptId];
-  if (!essays?.length) return null;
-  return (
-    <div className="space-y-3 border-t pt-4">
-      <div>
-        <h4 className="font-semibold">📖 参考范文（写完初稿后解锁）</h4>
-        <p className="text-xs text-muted-foreground">范文只供学习参考：读一读别人怎么写事情经过和感受，再想想自己的文章哪里可以写得更好，请不要照抄。</p>
-      </div>
-      {essays.map((m, i) => (
-        <details key={m.author} className="rounded-xl border bg-muted/40">
-          <summary className="cursor-pointer select-none px-4 py-3 font-medium">范文{i + 1}（{m.author}作品）</summary>
-          <div className="whitespace-pre-wrap px-4 pb-4 leading-relaxed">{m.text}</div>
-        </details>
-      ))}
     </div>
   );
 }

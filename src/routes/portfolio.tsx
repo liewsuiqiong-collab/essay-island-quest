@@ -8,7 +8,7 @@ export const Route = createFileRoute("/portfolio")({
   head: () => ({
     meta: [
       { title: "我的成长作品集 · 作文冒险岛" },
-      { name: "description", content: "查看每篇作文的题目、构思、初稿、修改稿、自我反思、教师评语和日期。" },
+      { name: "description", content: "查看每篇作文的题目、构思、初稿、修改稿、自我反思和日期。" },
       { property: "og:title", content: "我的成长作品集 · 作文冒险岛" },
       { property: "og:description", content: "记录每一次写作与修改的成长。" },
     ],
@@ -38,7 +38,7 @@ function Portfolio() {
                   </div>
                   <div className="flex shrink-0 flex-col items-end gap-1 text-xs">
                     <span className="rounded-full bg-sky-soft px-2 py-0.5">{e.status}</span>
-                    {e.teacherComment && <span className="rounded-full bg-grape-soft px-2 py-0.5">有教师评语</span>}
+                    {e.checklist.length > 0 && <span className="rounded-full bg-mint-soft px-2 py-0.5">已自查 {e.checklist.length} 项</span>}
                   </div>
                 </button>
                 {isOpen && (
@@ -52,7 +52,7 @@ function Portfolio() {
                       <Sec t={`修改稿（${countChars(e.revision)} 字）`}><div className="whitespace-pre-wrap rounded-lg bg-mint-soft p-3 text-sm leading-relaxed">{e.revision || "—"}</div></Sec>
                     </div>
                     <Sec t="自我反思">{e.reflection || "—"}</Sec>
-                    <Sec t="教师评语"><div className="rounded-lg bg-grape-soft p-3 text-sm">{e.teacherComment || "老师尚未评语。（目前仅限同一设备上的教师演示后台）"}</div></Sec>
+                    <Sec t="自我检查">{e.checklist.length ? `已勾选 ${e.checklist.length} 项` : "尚未完成自查清单"}</Sec>
                     <div className="flex gap-2">
                       <Link to="/challenge" search={{ essay: e.id }} className="btn btn-primary">继续编辑</Link>
                       <button className="btn btn-ghost text-destructive" onClick={() => confirm("确定删除这篇作品？") && deleteEssay(e.id)}>删除</button>
