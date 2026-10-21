@@ -8,7 +8,7 @@ import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
 // GitHub Pages serves the site under /essay-island-quest/. Only apply that base
 // when GITHUB_PAGES=1 so the Lovable preview keeps working at the root path.
-const PAGES_BASE = "/essay-island-quest/";
+const PAGES_BASE = "/essay-island/";
 const isPages = process.env["GITHUB_PAGES"] === "1";
 
 export default defineConfig({
