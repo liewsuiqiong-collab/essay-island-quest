@@ -24,5 +24,8 @@ export default defineConfig({
     // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
     // nitro/vite builds from this
     server: { entry: "server" },
+    // SPA mode: the production build is a fully static site (no server runtime),
+    // so it can be exported and hosted on GitHub Pages or any static host.
+    spa: { enabled: true },
   },
 });
