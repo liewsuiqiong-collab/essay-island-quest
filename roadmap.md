@@ -1,8 +1,8 @@
 # 作文闯关岛 · 90分钟复习活动改造
 
 ## GitHub Pages installation repair
-- [ ] Reproduce npm failure and verify frozen Bun installation without changing dependencies.
-- [ ] Pin the workflow package manager and verify the isolated static production build and existing tests.
+- [x] Reproduce npm failure and verify frozen Bun installation without changing dependencies.
+- [x] Pin the workflow package manager and verify the isolated static production build and existing tests.
 
 - [x] 生成范文学习馆岛屿素材 museum-island.png
 - [x] content.ts：范文标签（节选/摘要）、学习馆三组任务题库（结构侦探/表达升级/写作迁移）、挑战规划五栏
