@@ -1,14 +1,14 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { Feedback, LocalNotice, PageHead } from "@/components/kit";
-import { CHALLENGE_PROMPTS, MODEL_ESSAYS, MUSEUM_TASKS } from "@/lib/content";
+import { CHALLENGE_PROMPTS, DESCRIPTION_LABELS, MODEL_ESSAYS, MUSEUM_TASKS } from "@/lib/content";
 import { countChars, setMuseumResult, setStationScore, useStore } from "@/lib/store";
 
 export const Route = createFileRoute("/museum")({
   head: () => ({
     meta: [
       { title: "范文学习馆 · 作文闯关岛" },
-      { name: "description", content: "先写自己的作文，再解锁范文：结构侦探、表达升级、写作迁移三组任务。" },
+      { name: "description", content: "先读范文，找出外貌、心理、动作、语言描写，再完成自己的作文。" },
       { property: "og:title", content: "范文学习馆 · 作文闯关岛" },
       { property: "og:description", content: "读范文、学方法，不照抄。" },
       { property: "og:type", content: "website" },
@@ -21,22 +21,21 @@ export const Route = createFileRoute("/museum")({
 function MuseumPage() {
   const s = useStore();
   const [pid, setPid] = useState(() => {
-    const done = CHALLENGE_PROMPTS.find((p) => s.essays.some((e) => e.promptId === p.id && e.status !== "构思中"));
-    return (done ?? CHALLENGE_PROMPTS[0]!).id;
+    return CHALLENGE_PROMPTS[0]!.id;
   });
   const prompt = CHALLENGE_PROMPTS.find((p) => p.id === pid)!;
   const task = MUSEUM_TASKS[pid]!;
-  const unlocked = s.essays.some((e) => e.promptId === pid && e.status !== "构思中");
+  const unlocked = true;
   const saved = s.museumResults[pid];
   const [redo, setRedo] = useState(false);
 
   return (
     <div>
-      <PageHead icon="📚" title="范文学习馆" desc="先写自己的作文，再读范文、学方法：结构侦探 → 表达升级 → 写作迁移。满分 20 分。" tone="grape" />
+      <PageHead icon="📚" title="范文学习馆" desc="先读范文、学方法：结构侦探 → 描写侦探（外貌、心理、动作、语言）→ 写作迁移，然后去「作文终极挑战」完成自己的作文。满分 20 分。" tone="grape" />
       <div className="mb-4 flex flex-wrap gap-2">
         {CHALLENGE_PROMPTS.map((p) => (
           <button key={p.id} onClick={() => { setPid(p.id); setRedo(false); }} className={`chip ${p.id === pid ? "border-grape bg-grape-soft font-semibold" : ""}`}>
-            {p.label} {s.essays.some((e) => e.promptId === p.id && e.status !== "构思中") ? "🔓" : "🔒"}
+            {p.label} {s.museumResults[p.id] ? "✅" : ""}
           </button>
         ))}
       </div>
@@ -55,14 +54,14 @@ function MuseumPage() {
         <div className="card p-6">
           <h3 className="text-xl">🎓 本题学习任务已完成</h3>
           <div className="mt-3 grid gap-2 text-sm sm:grid-cols-3">
-            <div className="rounded-xl bg-sky-soft p-3">A. 结构侦探：<strong>{saved.a}/8 分</strong></div>
-            <div className="rounded-xl bg-mint-soft p-3">B. 表达升级：<strong>{saved.b}/6 分</strong></div>
-            <div className="rounded-xl bg-sun-soft p-3">C. 写作迁移：<strong>{saved.c}/6 分</strong></div>
+            <div className="rounded-xl bg-sky-soft p-3">A. 结构侦探：<strong>{saved.a}/4 分</strong></div>
+            <div className="rounded-xl bg-mint-soft p-3">B. 描写侦探：<strong>{saved.b}/8 分</strong></div>
+            <div className="rounded-xl bg-sun-soft p-3">C. 写作迁移：<strong>{saved.c}/8 分</strong></div>
           </div>
           <p className="mt-3">本题总分：<strong className="text-lg">{saved.total}/20</strong>（学习馆取各题最高分）</p>
           <div className="mt-4 flex flex-wrap gap-2">
             <button className="btn btn-ghost" onClick={() => setRedo(true)}>重新挑战</button>
-            <Link to="/report" className="btn btn-primary">查看学习报告 →</Link>
+            <Link to="/challenge" className="btn btn-primary">去完成我的作文 ✍️</Link>
           </div>
           <details className="mt-4 rounded-xl border bg-muted/40">
             <summary className="cursor-pointer select-none px-4 py-3 font-medium">再读一读范文</summary>
@@ -95,16 +94,16 @@ function EssayCards({ promptId }: { promptId: string }) {
 function TaskRunner({ promptId, cText: savedCText }: { promptId: string; cText: string }) {
   const task = MUSEUM_TASKS[promptId]!;
   const [aSel, setASel] = useState<(number | null)[]>(task.structure.map(() => null));
-  const [bPick, setBPick] = useState<number | null>(null);
+  const [bSel, setBSel] = useState<(number | null)[]>(task.description.map(() => null));
   const [cPick, setCPick] = useState<number | null>(null);
   const [cText, setCText] = useState(savedCText);
   const [result, setResult] = useState<{ a: number; b: number; c: number; total: number } | null>(null);
 
-  const aReady = aSel.every((x) => x !== null);
+  const aReady = aSel.every((x) => x !== null) && bSel.every((x) => x !== null);
   const submit = () => {
-    const a = task.structure.reduce((n, it, i) => n + (aSel[i] === it.answer ? 2 : 0), 0);
-    const b = bPick === task.expression.answer ? 6 : 0;
-    const c = (cPick === task.transfer.answer ? 4 : 0) + (countChars(cText) >= 5 ? 2 : 0);
+    const a = task.structure.reduce((n, it, i) => n + (aSel[i] === it.answer ? 1 : 0), 0);
+    const b = task.description.reduce((n, it, i) => n + (bSel[i] === it.answer ? 2 : 0), 0);
+    const c = (cPick === task.transfer.answer ? 4 : 0) + (countChars(cText) >= 15 ? 4 : 0);
     const total = a + b + c;
     const r = { a, b, c, cText, total };
     setMuseumResult(promptId, r);
@@ -117,8 +116,8 @@ function TaskRunner({ promptId, cText: savedCText }: { promptId: string; cText: 
     <div className="space-y-5">
       {result && (
         <Feedback kind={result.total >= 14 ? "ok" : "info"}>
-          <strong>本次得分：{result.total}/20</strong>（结构侦探 {result.a}/8 · 表达升级 {result.b}/6 · 写作迁移 {result.c}/6）。
-          学习馆取你各题的最高分。可以改正答案后再提交一次，或前往下一站「作文终极挑战」。
+          <strong>本次得分：{result.total}/20</strong>（结构侦探 {result.a}/4 · 描写侦探 {result.b}/8 · 写作迁移 {result.c}/8）。
+          学习馆取你各题的最高分。可以改正答案后再提交一次，现在带着学到的方法，去「作文终极挑战」完成自己的作文吧！
         </Feedback>
       )}
       <section className="card p-5">
@@ -127,7 +126,7 @@ function TaskRunner({ promptId, cText: savedCText }: { promptId: string; cText: 
       </section>
 
       <section className="card p-5">
-        <h3 className="text-lg">任务 A：结构侦探（8 分，配对一题 2 分）</h3>
+        <h3 className="text-lg">任务 A：结构侦探（4 分，每题 1 分）</h3>
         <p className="mt-1 text-sm text-muted-foreground">下面的四个节选分别属于文章的哪个部分？为每一段选出正确的结构。</p>
         <div className="mt-3 space-y-3">
           {task.structure.map((it, i) => (
@@ -155,19 +154,30 @@ function TaskRunner({ promptId, cText: savedCText }: { promptId: string; cText: 
       </section>
 
       <section className="card p-5">
-        <h3 className="text-lg">任务 B：表达升级（6 分）</h3>
-        <p className="mt-1 text-sm">{task.expression.q}</p>
-        <div className="mt-3 grid gap-2">
-          {task.expression.options.map((o, k) => (
-            <button key={k} disabled={result !== null} onClick={() => setBPick(k)}
-              className={`rounded-xl border-2 p-3 text-left text-sm transition hover:bg-muted ${bPick === k ? "border-grape bg-grape-soft" : ""} ${result && k === task.expression.answer ? "border-success bg-mint-soft" : ""}`}>{o}</button>
+        <h3 className="text-lg">任务 B：描写侦探（8 分，每题 2 分）</h3>
+        <p className="mt-1 text-sm text-muted-foreground">下面四句话都来自范文。它们分别用了哪一种描写？</p>
+        <div className="mt-3 space-y-3">
+          {task.description.map((it, i) => (
+            <div key={i} className="rounded-xl border p-3">
+              <p className="text-sm leading-relaxed">“{it.excerpt}”</p>
+              <div className="mt-2 flex flex-wrap gap-2">
+                {DESCRIPTION_LABELS.map((l, k) => (
+                  <button key={l} disabled={result !== null} onClick={() => setBSel(bSel.map((x, j) => (j === i ? k : x)))}
+                    className={`chip ${bSel[i] === k ? "border-grape bg-grape-soft font-semibold" : ""} ${result && k === it.answer ? "border-success bg-mint-soft" : ""}`}>{l}</button>
+                ))}
+                {result && (
+                  <span className={`text-sm ${bSel[i] === it.answer ? "text-success" : "text-destructive"}`}>
+                    {bSel[i] === it.answer ? "✓ 正确" : `✗ 正确答案：${DESCRIPTION_LABELS[it.answer]}`}
+                  </span>
+                )}
+              </div>
+            </div>
           ))}
         </div>
-        {result && <Feedback kind={bPick === task.expression.answer ? "ok" : "hint"}>{bPick === task.expression.answer ? "答对了！" : "再读读正确答案。"}{task.expression.explain}</Feedback>}
       </section>
 
       <section className="card p-5">
-        <h3 className="text-lg">任务 C：写作迁移（6 分）</h3>
+        <h3 className="text-lg">任务 C：写作迁移（8 分）</h3>
         <p className="mt-1 text-sm">{task.transfer.q}（4 分）</p>
         <div className="mt-3 grid gap-2">
           {task.transfer.options.map((o, k) => (
@@ -176,17 +186,17 @@ function TaskRunner({ promptId, cText: savedCText }: { promptId: string; cText: 
           ))}
         </div>
         {result && <Feedback kind={cPick === task.transfer.answer ? "ok" : "hint"}>{task.transfer.explain}</Feedback>}
-        <label className="mt-4 block text-sm">{task.transfer.fillPrompt}（写满 5 个字得 2 分）
+        <label className="mt-4 block text-sm">{task.transfer.fillPrompt}（写满 15 个字得 4 分）
           <textarea className="field mt-1 min-h-20" value={cText} disabled={result !== null} onChange={(e) => setCText(e.target.value)} placeholder="例如：我想学范文用对话推动情节的方法……" />
         </label>
       </section>
 
       {!result && (
-        <button className="btn btn-sun" disabled={!aReady || bPick === null || cPick === null} onClick={submit}>
+        <button className="btn btn-sun" disabled={!aReady || cPick === null} onClick={submit}>
           📤 提交学习任务并评分
         </button>
       )}
-      {!result && (!aReady || bPick === null || cPick === null) && <p className="text-xs text-muted-foreground">请完成任务 A、B、C 后再提交。评分完全依据本地预设答案，不评判开放式写作。</p>}
+      {!result && (!aReady || cPick === null) && <p className="text-xs text-muted-foreground">请完成任务 A、B、C 后再提交。评分完全依据本地预设答案，不评判开放式写作。</p>}
     </div>
   );
 }

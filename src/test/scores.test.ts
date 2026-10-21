@@ -68,9 +68,10 @@ describe("解锁规则", () => {
     expect(stationUnlocked(st({ audit: 20 }), "words")).toBe(true);
     expect(stationUnlocked(st({ audit: 20 }), "describe")).toBe(false);
   });
-  it("终极挑战只需完成句子升级站（不等待学习馆）", () => {
-    expect(stationUnlocked(st({ audit: 20, words: 20, describe: 20 }), "challenge")).toBe(true);
-    expect(stationUnlocked(st({ audit: 20, words: 20 }), "challenge")).toBe(false);
+  it("先读范文：完成句子升级站后开放学习馆，学习馆完成后才开放终极挑战", () => {
+    expect(stationUnlocked(st({ audit: 20, words: 20, describe: 20 }), "museum")).toBe(true);
+    expect(stationUnlocked(st({ audit: 20, words: 20, describe: 20 }), "challenge")).toBe(false);
+    expect(stationUnlocked(st({ audit: 20, words: 20, describe: 20, museum: 12 }), "challenge")).toBe(true);
   });
 });
 
