@@ -6,7 +6,7 @@ export interface EssayPrompt {
   id: string;
   title: string;
   type: EssayType;
-  level: "快捷华文" | "高级华文" | "通用";
+  level: "快捷华文" | "通用";
   tips: string[];
   label?: string;
   inChallenge?: boolean;

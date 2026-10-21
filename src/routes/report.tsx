@@ -57,7 +57,6 @@ function ReportPage() {
           <div className="mt-4 flex flex-wrap justify-center gap-x-6 gap-y-1 text-sm">
             <span>姓名：<strong>{s.name || "（未填写）"}</strong></span>
             <span>班级：<strong>{s.className || "（未填写）"}</strong></span>
-            <span>路线：<strong>{s.chineseTrack === "higher" ? "高级华文" : "快捷华文"}</strong></span>
             <span>学习日期：<strong>{fmtDate(new Date().toISOString()).slice(0, 9)}</strong></span>
           </div>
         </header>

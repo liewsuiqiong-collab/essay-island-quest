@@ -42,7 +42,6 @@ export interface DescRecord {
 export interface State {
   name: string;
   className: string;
-  chineseTrack: "express" | "higher";
   xp: number;
   awarded: string[];
   badges: string[];
@@ -65,7 +64,6 @@ const KEY = "zuowen-island-v1";
 const initial: State = {
   name: "同学",
   className: "",
-  chineseTrack: "express",
   xp: 0,
   awarded: [],
   badges: [],
@@ -167,7 +165,7 @@ export function setName(name: string) {
   set((s) => ({ ...s, name }));
 }
 
-export function setPlayerDetails(details: Partial<Pick<State, "className" | "chineseTrack">>) {
+export function setPlayerDetails(details: Partial<Pick<State, "className">>) {
   set((s) => ({ ...s, ...details }));
 }
 
