@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Feedback, LocalNotice, PageHead, Progress } from "@/components/kit";
 import { PlanBoard } from "@/components/PlanBoard";
-import { BUILTIN_PROMPTS, CHALLENGE_PROMPTS, CHECKLISTS, type EssayPrompt } from "@/lib/content";
+import { BUILTIN_PROMPTS, CHALLENGE_PROMPTS, CHECKLISTS, MODEL_ESSAYS, type EssayPrompt } from "@/lib/content";
 import { changedChars, essayHints } from "@/lib/feedback";
 import { award, countChars, fmtDate, giveBadge, now, uid, upsertEssay, useStore, type Essay } from "@/lib/store";
 
@@ -46,6 +46,7 @@ function ChallengePage() {
               {p.custom && <span className="rounded-full bg-sun-soft px-2 py-0.5">老师新增</span>}
             </div>
             <p className="mt-3 flex-1 leading-relaxed">{p.title}</p>
+            {MODEL_ESSAYS[p.id] && <p className="mt-2 text-xs text-muted-foreground">📖 提交初稿后可查看 {MODEL_ESSAYS[p.id].length} 篇参考范文</p>}
             <button className="btn btn-primary mt-4" onClick={() => { const e = newEssay(p); upsertEssay(e); navigate({ search: { essay: e.id } }); }}>开始挑战</button>
           </div>
         ))}
