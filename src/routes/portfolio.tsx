@@ -8,7 +8,7 @@ export const Route = createFileRoute("/portfolio")({
   head: () => ({
     meta: [
       { title: "我的成长作品集 · 作文冒险岛" },
-      { name: "description", content: "查看每篇作文的题目、构思、初稿、修改稿、自我反思、教师评语和日期。" },
+      { name: "description", content: "查看每篇作文的题目、构思、初稿、修改稿、自我反思和日期。" },
       { property: "og:title", content: "我的成长作品集 · 作文冒险岛" },
       { property: "og:description", content: "记录每一次写作与修改的成长。" },
     ],
