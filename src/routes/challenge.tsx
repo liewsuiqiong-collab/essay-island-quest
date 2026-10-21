@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Feedback, LocalNotice, PageHead, Progress } from "@/components/kit";
 import { PlanBoard } from "@/components/PlanBoard";
-import { BUILTIN_PROMPTS, CHECKLISTS, type EssayPrompt } from "@/lib/content";
+import { BUILTIN_PROMPTS, CHALLENGE_PROMPTS, CHECKLISTS, type EssayPrompt } from "@/lib/content";
 import { changedChars, essayHints } from "@/lib/feedback";
 import { award, countChars, fmtDate, giveBadge, now, uid, upsertEssay, useStore, type Essay } from "@/lib/store";
 
@@ -27,7 +27,7 @@ function ChallengePage() {
   const s = useStore();
   const { essay: essayId } = Route.useSearch();
   const navigate = Route.useNavigate();
-  const prompts = [...BUILTIN_PROMPTS, ...s.customPrompts];
+  const prompts = [...CHALLENGE_PROMPTS, ...s.customPrompts];
   const current = s.essays.find((e) => e.id === essayId);
 
   if (current) return <Editor key={current.id} initial={current} onBack={() => navigate({ search: {} })} />;
@@ -40,6 +40,7 @@ function ChallengePage() {
         {prompts.map((p) => (
           <div key={p.id} className="card flex flex-col p-5">
             <div className="flex gap-2 text-xs">
+              {p.label && <span className="rounded-full bg-sky-soft px-2 py-0.5 font-semibold">{p.label}</span>}
               <span className={`rounded-full px-2 py-0.5 ${p.type === "opinion" ? "bg-grape-soft" : "bg-mint-soft"}`}>{p.type === "opinion" ? "观点题 · PEEL" : "记叙文"}</span>
               <span className="rounded-full bg-muted px-2 py-0.5">{p.level}</span>
               {p.custom && <span className="rounded-full bg-sun-soft px-2 py-0.5">老师新增</span>}
