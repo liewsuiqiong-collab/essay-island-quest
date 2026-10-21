@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { AdventureMap } from "@/components/adventure/AdventureMap";
 import { PlayerPanel } from "@/components/adventure/PlayerPanel";
 import { levelInfo, resetAll, useStore } from "@/lib/store";
-import { STATIONS, stationScore, stationUnlocked, totalScore, TOTAL_MAX } from "@/lib/scores";
+import { STATIONS, stationScore, totalScore, TOTAL_MAX } from "@/lib/scores";
 import explorer from "@/assets/explorer.png";
 import ocean from "@/assets/adventure-ocean.jpg";
 
@@ -26,7 +26,7 @@ function Home() {
   const s = useStore();
   const lv = levelInfo(s.xp);
   const total = totalScore(s);
-  const next = STATIONS.find((st) => stationUnlocked(s, st.id) && stationScore(s, st.id) === null) ?? STATIONS[STATIONS.length - 1]!;
+  const next = STATIONS.find((st) => stationScore(s, st.id) === null) ?? STATIONS[STATIONS.length - 1]!;
   const clearProgress = () => {
     if (window.confirm("确定要清除这台设备上的所有进度吗？XP、徽章、作文草稿和得分都会被删除，无法恢复。建议先生成 PDF 学习报告。")) resetAll();
   };

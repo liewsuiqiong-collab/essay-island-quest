@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
-import { ArrowRight, Check, Clock3, Compass, Lock, Star } from "lucide-react";
+import { ArrowRight, Check, Clock3, Compass, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { STATIONS, stationDone, stationScore, stationUnlocked } from "@/lib/scores";
+import { STATIONS, stationDone, stationScore } from "@/lib/scores";
 import type { State } from "@/lib/store";
 import treasure from "@/assets/treasure-island.png";
 import magic from "@/assets/magic-island.png";
