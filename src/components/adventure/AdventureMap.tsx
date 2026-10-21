@@ -25,7 +25,6 @@ export function AdventureMap({ player }: { player: State }) {
       {STATIONS.map((st, index) => {
         const { image, theme } = ART[st.id]!;
         const completed = stationDone(player, st.id);
-        const unlocked = stationUnlocked(player, st.id);
         const score = stationScore(player, st.id);
         const caption = (
           <div className="island-caption">
@@ -35,22 +34,14 @@ export function AdventureMap({ player }: { player: State }) {
             <div className="island-meta">
               <span><Clock3 size={12} />{st.time}</span>
               <span>{score === null ? `满分 ${st.max} 分` : `得分 ${score}/${st.max}`}</span>
-              <span aria-label={completed ? "已完成" : "未完成"}><Star size={14} className={completed ? "earned-star" : "unearned-star"} />{completed ? "已完成" : "待挑战"}</span>
+              <span aria-label={completed ? "已完成" : "待挑战"}><Star size={14} className={completed ? "earned-star" : "unearned-star"} />{completed ? "已完成" : "待挑战"}</span>
             </div>
-            {unlocked ? (
-              <Button asChild variant="adventure" className="island-enter"><Link to={st.to}>{completed ? "再次探索" : "进入岛屿"}<ArrowRight /></Link></Button>
-            ) : (
-              <Button variant="adventure" className="island-enter" disabled><Lock size={13} />先完成上一站</Button>
-            )}
+            <Button asChild variant="adventure" className="island-enter"><Link to={st.to}>{completed ? "再次探索" : "进入岛屿"}<ArrowRight /></Link></Button>
           </div>
         );
-        return <article key={st.id} className={`island island-${theme} ${unlocked ? "" : "island-locked"}`}>
-          <div className="island-status">{completed ? <><Check size={13} />已完成</> : unlocked ? <><span className="status-dot" />{index === STATIONS.length - 1 ? "最终挑战" : "准备出发"}</> : <><Lock size={11} />未解锁</>}</div>
-          {unlocked ? (
-            <Link to={st.to} className="island-art-link" aria-label={`探索${st.name}`}><img src={image} alt={st.name} width={816} height={816} className="island-art" loading={index < 2 ? "eager" : "lazy"} /></Link>
-          ) : (
-            <div className="island-art-link" aria-hidden="true"><img src={image} alt="" width={816} height={816} className="island-art" loading="lazy" /></div>
-          )}
+        return <article key={st.id} className={`island island-${theme}`}>
+          <div className="island-status">{completed ? <><Check size={13} />已完成</> : <><span className="status-dot" />{index === STATIONS.length - 1 ? "最终挑战" : "准备出发"}</>}</div>
+          <Link to={st.to} className="island-art-link" aria-label={`探索${st.name}`}><img src={image} alt={st.name} width={816} height={816} className="island-art" loading={index < 2 ? "eager" : "lazy"} /></Link>
           {caption}
         </article>;
       })}
