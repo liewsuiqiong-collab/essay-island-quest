@@ -1,5 +1,6 @@
 import { Link, useLocation } from "@tanstack/react-router";
 import { useState } from "react";
+import { BookOpen, Compass, GraduationCap } from "lucide-react";
 import { levelInfo, useStore } from "@/lib/store";
 
 const NAV = [
@@ -18,6 +19,8 @@ export function AppHeader() {
   const [open, setOpen] = useState(false);
   const teacher = pathname.startsWith("/teacher");
   const lv = levelInfo(s.xp);
+
+  if (pathname === "/") return <header className="game-header"><div><Link to="/" className="game-header-brand"><Compass size={19} />作文闯关岛<span>ADVENTURE ISLAND</span></Link><nav aria-label="首页导航"><Link to="/portfolio"><BookOpen size={16} />我的作品集</Link><Link to="/teacher"><GraduationCap size={17} />教师入口</Link></nav></div></header>;
 
   if (teacher) {
     return (
