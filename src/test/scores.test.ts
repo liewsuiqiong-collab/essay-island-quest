@@ -81,7 +81,7 @@ describe("范文学习馆题库", () => {
       expect(t, p.id).toBeDefined();
       expect(t!.structure).toHaveLength(4);
       expect(t!.structure.map((x) => x.answer).sort()).toEqual([0, 1, 2, 3]);
-      expect(t!.expression.options.length).toBeGreaterThanOrEqual(4);
+      expect(t!.description.map((d) => d.answer).sort()).toEqual([0, 1, 2, 3]);
       expect(t!.transfer.options[t!.transfer.answer]).toBeTruthy();
     }
   });
