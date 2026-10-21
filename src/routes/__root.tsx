@@ -4,6 +4,7 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useLocation,
   HeadContent,
   Scripts,
   type ErrorComponentProps,
@@ -120,12 +121,13 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const { pathname } = useLocation();
 
   return (
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <AppHeader />
-      <main className="mx-auto max-w-6xl px-4 py-6 sm:py-8">
+      <main className={pathname === "/" ? "" : "mx-auto max-w-6xl px-4 py-6 sm:py-8"}>
         <Outlet />
       </main>
     </QueryClientProvider>

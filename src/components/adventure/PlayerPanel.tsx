@@ -1,0 +1,18 @@
+import { Flag, Star, Trophy } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { setName, setPlayerDetails, type State } from "@/lib/store";
+
+export function PlayerPanel({ player, completed }: { player: State; completed: number }) {
+  return <section className="player-panel" aria-label="玩家信息">
+    <div className="player-inputs">
+      <label><span>探险家姓名</span><input aria-label="玩家姓名" value={player.name} onChange={e => setName(e.target.value)} maxLength={30} /></label>
+      <label><span>我的班级</span><input aria-label="玩家班级" placeholder="输入班级" value={player.className} onChange={e => setPlayerDetails({ className: e.target.value })} maxLength={30} /></label>
+    </div>
+    <div className="player-track"><span>选择冒险路线</span><div className="track-options">
+      <Button variant="ghost" aria-pressed={player.chineseTrack === "express"} onClick={() => setPlayerDetails({ chineseTrack: "express" })}>快捷华文</Button>
+      <Button variant="ghost" aria-pressed={player.chineseTrack === "higher"} onClick={() => setPlayerDetails({ chineseTrack: "higher" })}>高级华文</Button>
+    </div></div>
+    <div className="player-rewards"><Star className="reward-star" size={29} /><div><strong>{player.xp}</strong><span>冒险 XP</span></div><div className="reward-divider" /><Trophy size={26} className="reward-trophy" /><div><strong>{player.badges.length}</strong><span>我的徽章</span></div></div>
+    <div className="player-progress"><div><span><Flag size={13} /> 闯关进度</span><strong>{completed} / 4</strong></div><div className="quest-progress" role="progressbar" aria-label="四岛闯关进度" aria-valuemin={0} aria-valuemax={4} aria-valuenow={completed}><span style={{ width: `${completed * 25}%` }} /></div></div>
+  </section>;
+}
