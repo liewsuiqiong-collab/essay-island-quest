@@ -119,9 +119,9 @@ function ReportPage() {
             <div className="mt-3 text-sm">
               <p>对应题目范文（{(MODEL_ESSAYS[essay.promptId]?.[0]?.kind) ?? "课堂参考"}）：</p>
               <div className="mt-2 grid gap-2 sm:grid-cols-3">
-                <div className="rounded-lg bg-sky-soft p-3">A. 结构侦探：<strong>{museum.a}/8 分</strong></div>
-                <div className="rounded-lg bg-mint-soft p-3">B. 表达升级：<strong>{museum.b}/6 分</strong></div>
-                <div className="rounded-lg bg-sun-soft p-3">C. 写作迁移：<strong>{museum.c}/6 分</strong></div>
+                <div className="rounded-lg bg-sky-soft p-3">A. 结构侦探：<strong>{museum.a}/4 分</strong></div>
+                <div className="rounded-lg bg-mint-soft p-3">B. 描写侦探：<strong>{museum.b}/8 分</strong></div>
+                <div className="rounded-lg bg-sun-soft p-3">C. 写作迁移：<strong>{museum.c}/8 分</strong></div>
               </div>
               <p className="mt-2">合计：<strong>{museum.total}/20 分</strong></p>
               {museum.cText.trim() && <p className="mt-2 rounded-lg border p-3">我想借鉴的写法：{museum.cText}</p>}

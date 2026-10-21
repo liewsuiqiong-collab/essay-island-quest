@@ -529,11 +529,13 @@ export const CHALLENGE_PLAN_FIELDS = [
 export interface MuseumTask {
   structure: { excerpt: string; answer: number }[];
   structureLabels: string[];
-  expression: { q: string; options: string[]; answer: number; explain: string };
+  description: { excerpt: string; answer: number }[];
   transfer: { q: string; options: string[]; answer: number; explain: string; fillPrompt: string };
 }
 
 const STRUCTURE_LABELS = ["开头", "主要事件", "关键转折 / 高潮", "结尾 / 启示"];
+
+export const DESCRIPTION_LABELS = ["外貌/神态描写", "心理描写", "动作描写", "语言描写"];
 
 export const MUSEUM_TASKS: Record<string, MuseumTask> = {
   "p-parents": {
@@ -544,12 +546,12 @@ export const MUSEUM_TASKS: Record<string, MuseumTask> = {
       { excerpt: "妈妈摇了摇头，温柔地说：“你还在发烧，妈妈怎么能放心呢？等你退烧了，我才能安心。”", answer: 2 },
       { excerpt: "经过这件事，我终于明白，父母虽然需要花更多时间照顾年幼的妹妹，但这并不代表他们不关心我。", answer: 3 },
     ],
-    expression: {
-      q: "下面四个句子，哪一个最能把「委屈」写得具体生动？",
-      options: ["我心里十分委屈。", "我心里就像打翻了五味瓶，难受极了。", "我觉得很委屈、很难过。", "我委屈极了，非常委屈。"],
-      answer: 1,
-      explain: "范文用「打翻了五味瓶」这个比喻，把复杂的委屈写具体了，而不是只写「我很委屈」。",
-    },
+    description: [
+      { excerpt: "（妈妈）伸手摸了摸我的额头，顿时皱起了眉头。", answer: 0 },
+      { excerpt: "每当看见爸爸妈妈陪妹妹玩耍，我心里就像打翻了五味瓶，难受极了。", answer: 1 },
+      { excerpt: "她连忙拿来体温计……又拿来一条湿毛巾，轻轻地敷在我的额头上。", answer: 2 },
+      { excerpt: "“你还在发烧，妈妈怎么能放心呢？等你退烧了，我才能安心。”", answer: 3 },
+    ],
     transfer: {
       q: "读这篇范文，最值得你借鉴的写法是哪一个？",
       options: [
@@ -571,12 +573,12 @@ export const MUSEUM_TASKS: Record<string, MuseumTask> = {
       { excerpt: "“小安，加油！你一定可以的！”……我深深地吸了一口气，擦干眼泪，重新站稳脚步，鼓起勇气拿起麦克风。", answer: 2 },
       { excerpt: "这次经历让我明白，遇到困难时，不能因为一次失败就轻易放弃。", answer: 3 },
     ],
-    expression: {
-      q: "下面四个句子，哪一个最能把「尴尬」写得具体生动？",
-      options: ["我非常尴尬。", "我觉得尴尬极了。", "我紧张得浑身发抖，脸色苍白得像一张白纸，恨不得立刻找个地洞钻进去。", "我当时特别紧张。"],
-      answer: 2,
-      explain: "范文用神态（脸色苍白）、心理（恨不得找地洞钻进去）展示尴尬，比直接说「我很尴尬」更有画面感。",
-    },
+    description: [
+      { excerpt: "我紧张得浑身发抖，脸色苍白得像一张白纸。", answer: 0 },
+      { excerpt: "我既兴奋又紧张，心里像有十五个吊桶打水——七上八下。", answer: 1 },
+      { excerpt: "我深深地吸了一口气，擦干眼泪，重新站稳脚步，鼓起勇气拿起麦克风。", answer: 2 },
+      { excerpt: "“小安，加油！你一定可以的！”", answer: 3 },
+    ],
     transfer: {
       q: "读这篇范文，最值得你借鉴的写法是哪一个？",
       options: [
@@ -598,12 +600,12 @@ export const MUSEUM_TASKS: Record<string, MuseumTask> = {
       { excerpt: "我原以为他会放弃，没想到，他却深深吸了一口气，继续向前跑去……最后，他终于跑到了终点。", answer: 2 },
       { excerpt: "明华让我明白，真正的坚强并不在于外表，而在于面对困难时是否有勇气坚持下去。", answer: 3 },
     ],
-    expression: {
-      q: "下面四个句子，哪一个最能把「坚持」写得具体生动？",
-      options: ["他坚持跑完了全程。", "他没有放弃。", "他紧紧握着拳头，咬紧牙关，一步一步地向前跑。", "他非常努力。"],
-      answer: 2,
-      explain: "范文用动作描写（握拳、咬牙、一步一步）展示坚持，读者仿佛能看见他跑步的样子。",
-    },
+    description: [
+      { excerpt: "他长得十分瘦小，站在我们旁边时，就像一棵小树站在几棵大树之间。", answer: 0 },
+      { excerpt: "我原以为他会放弃……听了他的话，我不禁对他刮目相看。", answer: 1 },
+      { excerpt: "他咬紧牙关，努力迈开沉重的脚步。", answer: 2 },
+      { excerpt: "“如果他们要笑，就让他们笑吧！我不想太在意这些事情。”", answer: 3 },
+    ],
     transfer: {
       q: "读这篇范文，最值得你借鉴的写法是哪一个？",
       options: [

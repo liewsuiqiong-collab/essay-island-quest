@@ -27,12 +27,11 @@ export const stationScore = (s: State, id: string): number | null =>
 
 export const totalScore = (s: State): number => STATIONS.reduce((n, st) => n + (stationScore(s, st.id) ?? 0), 0);
 
-/** 解锁规则：第一站总是解锁；之后每一站需先完成前一站（终极挑战只需完成第三站，避免与学习馆互相等待）。 */
+/** 解锁规则：第一站总是解锁；之后每一站需先完成前一站（先读范文，再写终极挑战作文）。 */
 export function stationUnlocked(s: State, id: string): boolean {
   const i = STATIONS.findIndex((st) => st.id === id);
   if (i <= 0) return true;
-  const need = id === "challenge" ? "describe" : STATIONS[i - 1]!.id;
-  return stationScore(s, need) !== null;
+  return stationScore(s, STATIONS[i - 1]!.id) !== null;
 }
 
 export const stationDone = (s: State, id: string) => stationScore(s, id) !== null;
