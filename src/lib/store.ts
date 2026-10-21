@@ -54,6 +54,10 @@ export interface State {
   customPrompts: EssayPrompt[];
   stats: { auditWrong: Record<string, number>; quizWrong: Record<string, number> };
   classNotes: string[];
+  /** 五个闯关站的最高得分（每站满分 20） */
+  scores: Record<string, number>;
+  /** 范文学习馆成绩：按题目保存各任务得分与迁移填答 */
+  museumResults: Record<string, { a: number; b: number; c: number; cText: string; total: number }>;
 }
 
 const KEY = "zuowen-island-v1";
@@ -73,6 +77,8 @@ const initial: State = {
   customPrompts: [],
   stats: { auditWrong: {}, quizWrong: {} },
   classNotes: [],
+  scores: {},
+  museumResults: {},
 };
 
 let state: State = initial;
@@ -210,6 +216,20 @@ export function removeClassNote(i: number) {
 
 export function resetAll() {
   set(() => initial);
+}
+
+/* ---------- 闯关站得分 ---------- */
+/** 记录某站得分，只保留历史最高 */
+export function setStationScore(station: string, score: number) {
+  set((s) => {
+    const prev = s.scores[station] ?? -1;
+    if (score <= prev) return s;
+    return { ...s, scores: { ...s.scores, [station]: Math.min(20, Math.max(0, Math.round(score))) } };
+  });
+}
+
+export function setMuseumResult(promptId: string, r: { a: number; b: number; c: number; cText: string; total: number }) {
+  set((s) => ({ ...s, museumResults: { ...s.museumResults, [promptId]: r } }));
 }
 
 /** 统计中文字数（汉字 + 中文标点不计） */
