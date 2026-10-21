@@ -6,8 +6,14 @@
 // You can pass additional config via defineConfig({ vite: { ... }, etc... }) if needed.
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
+// GitHub Pages serves the site under /essay-island-quest/. Only apply that base
+// when GITHUB_PAGES=1 so the Lovable preview keeps working at the root path.
+const PAGES_BASE = "/essay-island-quest/";
+const isPages = process.env["GITHUB_PAGES"] === "1";
+
 export default defineConfig({
   vite: {
+    ...(isPages ? { base: PAGES_BASE } : {}),
     optimizeDeps: {
       // Prebundle shared UI dependencies before serving pages. Discovering them
       // during HMR can otherwise leave a tab with mismatched React bundles.
@@ -27,5 +33,6 @@ export default defineConfig({
     // SPA mode: the production build is a fully static site (no server runtime),
     // so it can be exported and hosted on GitHub Pages or any static host.
     spa: { enabled: true },
+    ...(isPages ? { router: { basepath: PAGES_BASE } } : {}),
   },
 });
