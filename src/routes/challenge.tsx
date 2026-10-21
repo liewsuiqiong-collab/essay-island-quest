@@ -34,7 +34,8 @@ function ChallengePage() {
 
   return (
     <div>
-      <PageHead icon="🏆" title="作文挑战赛" desc="独立完成一篇作文：审题 → 构思 → 初稿 → 自查 → 修改 → 反思。" />
+      <PageHead icon="🏆" title="作文终极挑战" desc="独立完成一篇作文：审题 → 构思 → 初稿 → 自查 → 修改 → 反思。按完成度计分，满分 20 分。" />
+      <Feedback kind="info">💾 草稿会自动保存在这台设备的浏览器里；刷新或换设备可能丢失进度。写完后请到「学习报告」生成 PDF，再自行上传到 Google Classroom 提交。</Feedback>
       <h2 className="mb-3 text-xl">选择题目开始</h2>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {prompts.map((p) => (
@@ -94,6 +95,7 @@ function Editor({ initial, onBack }: { initial: Essay; onBack: () => void }) {
     if (e.checklist.length < CHECKLISTS[e.type].length) return setMsg({ k: "hint", t: "请先完成自查清单中的每一项（如实勾选，没做到的回去修改）。" });
     const next = { ...e, status: "初稿已提交" as const, revision: e.revision || e.draft };
     setE(next); upsertEssay(next);
+    setStationScore("challenge", challengeScore(next).total);
     award(`essay-draft-${e.id}`, 40, "作文挑战：提交初稿", "构思");
     giveBadge("challenge");
     setMsg({ k: "ok", t: "初稿已提交！+40 XP。初稿已锁定保留，接下来在「修改稿」中修改。" });
@@ -106,6 +108,7 @@ function Editor({ initial, onBack }: { initial: Essay; onBack: () => void }) {
     if (diff < need) return setMsg({ k: "hint", t: `修改稿与初稿只差约 ${diff} 个字。认真修改（至少改动约 ${need} 字）才能获得修改 XP，试着加强高潮描写或修正结构。` });
     const next = { ...e, status: "修改稿已提交" as const };
     setE(next); upsertEssay(next);
+    setStationScore("challenge", challengeScore(next).total);
     award(`essay-rev-${e.id}`, 50, "作文挑战：认真修改并提交修改稿", "修改");
     giveBadge("reviser");
     setMsg({ k: "ok", t: `修改稿已提交！改动约 ${diff} 字，+50 XP，获得「认真修改家」徽章。` });
@@ -115,6 +118,7 @@ function Editor({ initial, onBack }: { initial: Essay; onBack: () => void }) {
     const n = countChars(e.reflection);
     if (n < 30) return setMsg({ k: "hint", t: `反思目前 ${n} 字，请至少写 30 字：你改了什么？为什么？下次要注意什么？` });
     upsertEssay(e);
+    setStationScore("challenge", challengeScore(e).total);
     award(`essay-ref-${e.id}`, 20, "作文挑战：完成自我反思", "修改");
     giveBadge("reflector");
     setMsg({ k: "ok", t: "反思已保存！+20 XP。可以到「我的成长作品集」查看完整记录。" });
@@ -152,9 +156,16 @@ function Editor({ initial, onBack }: { initial: Essay; onBack: () => void }) {
 
         {step === 1 && (
           <div className="space-y-3">
-            <h3 className="text-xl">第二步：构思 {e.type === "opinion" ? "（PEEL：观点、解释、例子、联系）" : "（开端→发展→高潮→结局→反思）"}</h3>
-            <PlanBoard mode={e.type === "opinion" ? "peel" : "narrative"} value={e.plan} onChange={(plan) => up({ plan })} />
-            {e.type === "opinion" && <p className="text-xs text-muted-foreground">PEEL 适用于每个主体段。有两个理由时，可在每格分别写「理由一 / 理由二」。</p>}
+            <h3 className="text-xl">第二步：内容规划</h3>
+            <div className="grid gap-3 sm:grid-cols-2">
+              {CHALLENGE_PLAN_FIELDS.map((f) => (
+                <label key={f.key} className="block rounded-xl border p-3 text-sm">
+                  <strong>{f.label}</strong>
+                  <span className="mt-0.5 block text-xs text-muted-foreground">{f.q}</span>
+                  <textarea className="field mt-2 min-h-20" value={e.plan[f.key] ?? ""} onChange={(ev) => up({ plan: { ...e.plan, [f.key]: ev.target.value } })} />
+                </label>
+              ))}
+            </div>
             <div className="flex gap-2"><button className="btn btn-ghost" onClick={() => save("构思已保存。")}>保存构思</button><button className="btn btn-primary" onClick={() => go(2)}>开始写作 →</button></div>
           </div>
         )}
