@@ -8,17 +8,41 @@ export interface EssayPrompt {
   type: EssayType;
   level: "快捷华文" | "高级华文" | "通用";
   tips: string[];
+  label?: string;
+  inChallenge?: boolean;
   custom?: boolean;
 }
 
 export const BUILTIN_PROMPTS: EssayPrompt[] = [
   {
-    id: "p-embarrass",
+    id: "p-parents",
+    label: "Q3",
+    inChallenge: true,
     type: "narrative",
     level: "通用",
     title:
-      "你代表学校参加一场比赛。比赛中却发生了一件令你感到十分尴尬的事情。试写出事情的经过以及你从中学到的教训。",
-    tips: ["「代表学校」说明有责任感与压力", "重点写「尴尬」的事情经过", "结尾必须写出「学到的教训」"],
+      "你常常觉得父母不关心你，甚至认为他们偏心妹妹，让你感到失落和委屈。直到一件事情的发生，你才发现他们一直很重视你。试写出事情的经过和你的感受。",
+    tips: ["「失落和委屈」说明开头要写误会与心情", "重点写「一件事情」的经过，它改变了你的看法", "结尾写出「你的感受」：从失落到发现父母一直重视你"],
+  },
+  {
+    id: "p-embarrass",
+    label: "Q4",
+    inChallenge: true,
+    type: "narrative",
+    level: "通用",
+    title:
+      "你代表学校参加一场比赛。比赛中却发生了一件令你感到十分尴尬的事情。试写出事情的经过，以及你从中得到的启示。",
+    tips: ["「代表学校」说明有责任感与压力", "重点写「尴尬」的事情经过", "结尾必须写出「得到的启示」"],
+  },
+  {
+    id: "p-strong",
+    label: "Q5",
+    inChallenge: true,
+    type: "narrative",
+    level: "通用",
+    title:
+      "根据以下材料，写一篇文章，记叙一位外表弱小、内心却坚强的人。你的同学外表看起来弱小，但却有着坚强的内心。无论是在生活中还是学习上，每当遇到困难时，他总是想办法解决问题，从不轻易放弃。请通过具体的事例，写出他的坚强以及你对他的感受。",
+    tips: ["抓住材料要点：外表弱小、内心坚强、遇到困难不放弃", "用「具体事例」表现他的坚强，事例可来自生活或学习", "结尾写出「你对他的感受」：敬佩、感动或反思"],
   },
   {
     id: "p-love-parents",
@@ -35,6 +59,9 @@ export const BUILTIN_PROMPTS: EssayPrompt[] = [
     tips: ["写清楚帮助的过程", "「收获」可以是感悟或成长"],
   },
 ];
+
+/* 作文挑战赛只展示这三道题 */
+export const CHALLENGE_PROMPTS: EssayPrompt[] = BUILTIN_PROMPTS.filter((p) => p.inChallenge);
 
 /* ---------------- 审题侦探 ---------------- */
 export interface AuditOption {
@@ -66,7 +93,7 @@ export const AUDIT_CASES: AuditCase[] = [
   {
     id: "a-embarrass",
     promptId: "p-embarrass",
-    title: BUILTIN_PROMPTS[0]!.title,
+    title: BUILTIN_PROMPTS.find((p) => p.id === "p-embarrass")!.title,
     steps: [
       {
         q: "请选出题目中的关键词（可多选）",
@@ -75,12 +102,12 @@ export const AUDIT_CASES: AuditCase[] = [
           { text: "代表学校", correct: true },
           { text: "比赛中", correct: true },
           { text: "十分尴尬", correct: true },
-          { text: "学到的教训", correct: true },
+          { text: "得到启示", correct: true },
           { text: "获得冠军", correct: false },
           { text: "老师批评", correct: false },
         ],
         hint: "关键词通常是限制范围的词：身份、时间地点、情感、结尾要求。题目里没出现的词不算。",
-        explain: "「代表学校」限定身份，「比赛中」限定时间场合，「十分尴尬」限定情感，「学到的教训」是结尾要求。「获得冠军」「老师批评」题目没有要求。",
+        explain: "「代表学校」限定身份，「比赛中」限定时间场合，「十分尴尬」限定情感，「得到的启示」是结尾要求。「获得冠军」「老师批评」题目没有要求。",
       },
       {
         q: "文章的主要人物应该是谁？",
@@ -107,26 +134,26 @@ export const AUDIT_CASES: AuditCase[] = [
         multi: true,
         options: [
           { text: "写出事情的经过", correct: true },
-          { text: "写出从中学到的教训", correct: true },
+          { text: "写出从中得到的启示", correct: true },
           { text: "必须写比赛获胜", correct: false },
           { text: "必须用议论文写法", correct: false },
         ],
         hint: "找「试写出……以及……」这句，里面有两个要求。",
-        explain: "题目要求两项：「事情的经过」（记叙为主）与「学到的教训」（反思）。不要求结果输赢，也是记叙文而非议论文。",
+        explain: "题目要求两项：「事情的经过」（记叙为主）与「得到的启示」（反思）。不要求结果输赢，也是记叙文而非议论文。",
       },
     ],
     judges: [
       {
         outline: "我代表学校参加演讲比赛，上台时太紧张，把讲稿拿反了，台下哄堂大笑。我红着脸重新开始，最后明白了充分准备与临场冷静的重要。",
         answer: "切题",
-        hint: "对照：代表学校？比赛中？尴尬？教训？",
-        explain: "四个关键词全部扣住，事件发生在比赛中，结尾有教训，是切题的构思。",
+        hint: "对照：代表学校？比赛中？尴尬？启示？",
+        explain: "四个关键词全部扣住，事件发生在比赛中，结尾有启示，是切题的构思。",
       },
       {
         outline: "我代表学校参加篮球赛，我们一路过关斩将，最后夺得冠军，大家都很开心，我学到团结就是力量。",
         answer: "偏题",
-        hint: "有比赛也有教训，但「尴尬」在哪里？",
-        explain: "身份、场合、教训都有，却缺少核心的「尴尬」事件，属于偏题（部分符合）。",
+        hint: "有比赛也有启示，但「尴尬」在哪里？",
+        explain: "身份、场合、启示都有，却缺少核心的「尴尬」事件，属于偏题（部分符合）。",
       },
       {
         outline: "周末我和家人去动物园，弟弟在猴子馆前摔倒，我觉得很好笑，学会了要照顾弟弟。",
