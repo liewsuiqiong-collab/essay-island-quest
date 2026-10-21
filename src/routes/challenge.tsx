@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Feedback, LocalNotice, PageHead, Progress } from "@/components/kit";
 import { PlanBoard } from "@/components/PlanBoard";
-import { BUILTIN_PROMPTS, CHALLENGE_PROMPTS, CHECKLISTS, type EssayPrompt } from "@/lib/content";
+import { BUILTIN_PROMPTS, CHALLENGE_PROMPTS, CHECKLISTS, MODEL_ESSAYS, type EssayPrompt } from "@/lib/content";
 import { changedChars, essayHints } from "@/lib/feedback";
 import { award, countChars, fmtDate, giveBadge, now, uid, upsertEssay, useStore, type Essay } from "@/lib/store";
 
@@ -46,6 +46,7 @@ function ChallengePage() {
               {p.custom && <span className="rounded-full bg-sun-soft px-2 py-0.5">老师新增</span>}
             </div>
             <p className="mt-3 flex-1 leading-relaxed">{p.title}</p>
+            {(MODEL_ESSAYS[p.id]?.length ?? 0) > 0 && <p className="mt-2 text-xs text-muted-foreground">📖 提交初稿后可查看 {MODEL_ESSAYS[p.id]?.length} 篇参考范文</p>}
             <button className="btn btn-primary mt-4" onClick={() => { const e = newEssay(p); upsertEssay(e); navigate({ search: { essay: e.id } }); }}>开始挑战</button>
           </div>
         ))}
@@ -194,6 +195,7 @@ function Editor({ initial, onBack }: { initial: Essay; onBack: () => void }) {
                 </div>
                 {hints.length > 0 && <Feedback kind="hint"><div className="mb-1 font-semibold">修改方向（规则式提醒）：</div><ul className="list-disc pl-4">{hints.map((t) => <li key={t}>{t}</li>)}</ul></Feedback>}
                 <div className="flex flex-wrap gap-2"><button className="btn btn-ghost" onClick={() => save("修改稿已保存。")}>💾 保存修改稿</button><button className="btn btn-sun" onClick={submitRevision}>📤 提交修改稿</button><button className="btn btn-primary" onClick={() => go(5)}>写反思 →</button></div>
+                <ModelEssays promptId={e.promptId} />
               </>
             )}
           </div>
@@ -205,11 +207,32 @@ function Editor({ initial, onBack }: { initial: Essay; onBack: () => void }) {
             <ul className="list-disc pl-5 text-sm text-muted-foreground"><li>这次我主要修改了哪里？为什么？</li><li>我觉得写得最好的一段是哪段？</li><li>下次写作我要特别注意什么？</li></ul>
             <textarea className="field min-h-40" value={e.reflection} onChange={(ev) => up({ reflection: ev.target.value })} />
             <div className="flex gap-2"><button className="btn btn-sun" onClick={submitReflection}>保存反思</button><Link to="/portfolio" className="btn btn-ghost">查看作品集</Link></div>
+            <ModelEssays promptId={e.promptId} />
           </div>
         )}
         {msg && <Feedback kind={msg.k}>{msg.t}</Feedback>}
       </div>
       <div className="mt-4"><LocalNotice /></div>
+    </div>
+  );
+}
+
+/* 提交初稿后解锁的参考范文：供修改稿与反思阶段对照学习 */
+function ModelEssays({ promptId }: { promptId: string }) {
+  const essays = MODEL_ESSAYS[promptId];
+  if (!essays?.length) return null;
+  return (
+    <div className="space-y-3 border-t pt-4">
+      <div>
+        <h4 className="font-semibold">📖 参考范文（写完初稿后解锁）</h4>
+        <p className="text-xs text-muted-foreground">范文只供学习参考：读一读别人怎么写事情经过和感受，再想想自己的文章哪里可以写得更好，请不要照抄。</p>
+      </div>
+      {essays.map((m, i) => (
+        <details key={m.author} className="rounded-xl border bg-muted/40">
+          <summary className="cursor-pointer select-none px-4 py-3 font-medium">范文{i + 1}（{m.author}作品）</summary>
+          <div className="whitespace-pre-wrap px-4 pb-4 leading-relaxed">{m.text}</div>
+        </details>
+      ))}
     </div>
   );
 }
