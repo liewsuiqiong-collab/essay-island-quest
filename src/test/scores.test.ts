@@ -22,7 +22,7 @@ const baseEssay: Essay = {
 
 const fullEssay: Essay = {
   ...baseEssay,
-  audit: { keywords: "比赛", people: "我", event: "尴尬的事", requirement: "经过与启示" },
+  audit: { keywords: "比赛", people: "我们", event: "尴尬的事", requirement: "经过与启示" },
   plan: { opening: "开头", event: "事件", turning: "转折", feeling: "感受", ending: "启示" },
   draft: "我".repeat(200),
   revision: "我".repeat(150) + "改".repeat(60),
@@ -40,7 +40,7 @@ describe("作文终极挑战计分（满分 20，按完成度）", () => {
     const r = challengeScore(fullEssay);
     expect(r.total).toBe(20);
   });
-  it("只提交初稿得 11 分（审题 3 + 规划 4 + 初稿 5 - 未完成项）", () => {
+  it("只提交初稿得 12 分（审题 3 + 规划 4 + 初稿 5，未完成项不计分）", () => {
     const e: Essay = { ...fullEssay, status: "初稿已提交", checklist: [], reflection: "", revision: fullEssay.draft };
     expect(challengeScore(e).total).toBe(3 + 4 + 5);
   });
