@@ -46,7 +46,7 @@ function ChallengePage() {
               {p.custom && <span className="rounded-full bg-sun-soft px-2 py-0.5">老师新增</span>}
             </div>
             <p className="mt-3 flex-1 leading-relaxed">{p.title}</p>
-            {MODEL_ESSAYS[p.id] && <p className="mt-2 text-xs text-muted-foreground">📖 提交初稿后可查看 {MODEL_ESSAYS[p.id].length} 篇参考范文</p>}
+            {(MODEL_ESSAYS[p.id]?.length ?? 0) > 0 && <p className="mt-2 text-xs text-muted-foreground">📖 提交初稿后可查看 {MODEL_ESSAYS[p.id]?.length} 篇参考范文</p>}
             <button className="btn btn-primary mt-4" onClick={() => { const e = newEssay(p); upsertEssay(e); navigate({ search: { essay: e.id } }); }}>开始挑战</button>
           </div>
         ))}
