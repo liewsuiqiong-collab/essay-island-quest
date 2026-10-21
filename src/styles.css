@@ -43,9 +43,23 @@
   --color-ink: var(--ink);
   --color-success: var(--success);
   --color-warn: var(--warn);
+  --color-coral: var(--coral);
+  --color-coral-hover: var(--coral-hover);
 }
 
 :root {
+  --coral: oklch(0.68 0.19 35);
+  --coral-hover: oklch(0.62 0.19 35);
+  --game-ink: oklch(0.32 0.08 208);
+  --game-ocean: oklch(0.81 0.12 199);
+  --game-paper: oklch(0.99 0.018 93);
+  --game-gold: oklch(0.84 0.16 85);
+  --game-wood: oklch(0.57 0.105 60);
+  --game-wood-dark: oklch(0.4 0.08 55);
+  --game-wood-light: oklch(0.72 0.115 65);
+  --game-shadow: 0 8px 22px oklch(0.36 0.09 205 / 16%);
+  --game-button-shadow: 0 5px 0 oklch(0.48 0.15 35), 0 8px 14px oklch(0.4 0.1 35 / 15%);
+  --game-title-shadow: 0 3px 0 var(--game-wood-dark);
   --radius: 0.9rem;
   --background: oklch(0.985 0.012 220);
   --foreground: oklch(0.26 0.04 250);
@@ -179,6 +193,61 @@
   h3,
   .font-display {
     font-family: var(--font-display);
-    letter-spacing: 0.02em;
+    letter-spacing: 0;
   }
 }
+
+.game-header { background: var(--game-paper); color: var(--game-ink); border-bottom: 1px solid var(--border); }
+.game-header > div { max-width: 1260px; margin: auto; display: flex; justify-content: space-between; align-items: center; min-height: 56px; padding: 0 32px; gap: 16px; }
+.game-header-brand { display: flex; align-items: center; gap: 9px; font-weight: 700; font-size: 15px; }
+.game-header-brand span { font-size: 10px; font-weight: 500; opacity: .5; padding-left: 10px; border-left: 1px solid var(--border); }
+.game-header nav { display: flex; gap: 25px; font-size: 12px; }
+.game-header nav a, .adventure-footer a { display: flex; align-items: center; gap: 6px; }
+.game-header a:hover, .adventure-footer a:hover { color: var(--coral); }
+.adventure-home { position: relative; isolation: isolate; background: var(--game-ocean); color: var(--game-ink); min-height: calc(100vh - 56px); overflow: hidden; }
+.ocean-backdrop { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -1; }
+.adventure-content { max-width: 1260px; margin: auto; padding: 22px 32px 18px; }
+.adventure-intro { display: grid; grid-template-columns: 1fr 1.2fr 1fr; align-items: center; gap: 24px; min-height: 150px; }
+.explorer-welcome { display: flex; align-items: center; gap: 0; }
+.explorer-welcome img { height: 150px; width: 135px; object-fit: contain; }
+.explorer-welcome div { display: flex; flex-direction: column; gap: 8px; font-size: 14px; min-width: 0; }
+.explorer-welcome span { overflow-wrap: anywhere; }
+.explorer-welcome strong { font-size: 11px; background: var(--game-paper); border-radius: 999px; padding: 6px 10px; width: fit-content; }
+.game-title { position: relative; background: linear-gradient(180deg,var(--game-wood-light),var(--game-wood)); border: 4px solid var(--game-wood-dark); border-radius: 16px 12px 18px 10px; padding: 17px 20px 14px; text-align: center; color: var(--game-paper); box-shadow: 0 5px 0 var(--game-wood-dark), var(--game-shadow); transform: rotate(-1deg); }
+.game-title::before,.game-title::after { content: ''; position: absolute; top: 16px; width: 8px; height: 8px; border-radius: 50%; background: var(--game-gold); box-shadow: 0 1px 2px var(--game-wood-dark); }
+.game-title::before { left: 12px; }.game-title::after { right: 12px; }
+.game-title h1 { font-size: 42px; text-shadow: var(--game-title-shadow); line-height: 1.25; white-space: nowrap; }
+.game-title p { margin-top: 5px; font-size: 16px; color: var(--game-gold); }
+.title-compass { position: absolute; left: -17px; bottom: -11px; width: 39px; height: 39px; display: grid; place-items: center; background: var(--game-gold); color: var(--game-wood-dark); border-radius: 50%; border: 3px solid var(--game-wood-dark); transform: rotate(-20deg); }
+.intro-note { text-align: right; font-size: 14px; line-height: 1.8; }
+.intro-note strong { display: block; font-size: 18px; }.intro-note div { display: flex; justify-content: flex-end; align-items: center; gap: 5px; font-size: 11px; margin-top: 8px; }
+.player-panel { display: grid; grid-template-columns: 1.35fr 1fr .9fr .8fr; gap: 25px; align-items: center; padding: 16px 22px; margin-top: 18px; background: color-mix(in oklab,var(--game-paper) 95%,transparent); border: 2px solid var(--card); border-radius: 16px; box-shadow: var(--game-shadow); }
+.player-inputs { display: flex; gap: 12px; min-width: 0; }.player-inputs label { width: 50%; min-width: 0; }
+.player-panel label > span,.player-track > span { display: block; font-size: 11px; margin-bottom: 6px; }
+.player-panel input { width: 100%; border: 1px solid var(--input); border-radius: 7px; background: var(--card); padding: 7px 9px; font-size: 13px; outline-color: var(--primary); }
+.track-options { display: flex; padding: 3px; border: 1px solid var(--border); background: var(--muted); border-radius: 9px; }
+.track-options button { font-size: 12px; height: 31px; flex: 1; padding: 0 10px; }.track-options button[aria-pressed=true] { background: var(--mint-soft); color: var(--game-ink); box-shadow: 0 1px 3px var(--border); }
+.player-rewards { display: flex; align-items: center; justify-content: center; gap: 8px; }.player-rewards strong { display: block; font-size: 22px; line-height: 1.2; }.player-rewards span { font-size: 10px; }
+.reward-star,.earned-star { fill: var(--game-gold); color: var(--sun); }.reward-trophy { color: var(--sun); }.reward-divider { height: 30px; border-left: 1px solid var(--border); margin: 0 5px; }
+.player-progress > div:first-child { display: flex; justify-content: space-between; gap: 12px; font-size: 11px; margin-bottom: 8px; }.player-progress > div span { display: flex; align-items: center; gap: 4px; }
+.quest-progress { height: 10px; border: 1px solid var(--border); background: var(--mint-soft); border-radius: 999px; overflow: hidden; }.quest-progress > span { height: 100%; display: block; background: var(--success); transition: width .3s; }
+.map-heading { display: flex; align-items: center; gap: 8px; padding-top: 26px; }.map-heading h2 { font-family: var(--font-sans); font-size: 18px; font-weight: 700; }.map-heading > span { margin-left: auto; font-size: 11px; }
+.island-grid { position: relative; display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 14px; padding: 28px 0 32px; }
+.adventure-trail { position: absolute; width: 100%; height: 330px; left: 0; top: 12px; pointer-events: none; }.adventure-trail path { stroke: var(--game-paper); stroke-width: 5; fill: none; stroke-linecap: round; stroke-dasharray: 9 13; opacity: .85; }
+.island { position: relative; text-align: center; min-width: 0; }.island-magic,.island-final { padding-top: 25px; }
+.island-status { display: inline-flex; align-items: center; justify-content: center; gap: 5px; border-radius: 999px; background: var(--game-paper); font-size: 10px; padding: 4px 10px; box-shadow: var(--game-shadow); position: relative; z-index: 1; }.status-dot { width: 5px; height: 5px; background: var(--success); border-radius: 50%; }
+.island-art-link { display: block; margin: -2px -8px 0; }.island-art { width: 100%; aspect-ratio: 1; object-fit: contain; transition: transform .25s,filter .25s; filter: drop-shadow(0 8px 7px color-mix(in oklab,var(--game-ink) 20%,transparent)); }.island-art-link:hover .island-art { transform: translateY(-7px) scale(1.04); }
+.island-caption { position: relative; background: var(--game-paper); border: 2px solid var(--card); border-radius: 13px; padding: 20px 12px 14px; margin: -13px 9px 0; box-shadow: var(--game-shadow); }
+.island-number { position: absolute; left: calc(50% - 15px); top: -17px; background: var(--success); border: 3px solid var(--game-paper); color: var(--primary-foreground); width: 30px; height: 30px; display: grid; place-items: center; border-radius: 50%; font-size: 11px; font-weight: 700; }.island-magic .island-number { background: var(--grape); }.island-sentence .island-number { background: var(--sky); }.island-final .island-number { background: var(--sun); }
+.island-caption h3 { font-family: var(--font-sans); font-size: 18px; font-weight: 700; }.island-caption p { font-size: 11px; margin-top: 4px; opacity: .7; }
+.island-meta { display: flex; align-items: center; justify-content: center; gap: 11px; margin: 12px 0; font-size: 10px; }.island-meta span { display: inline-flex; align-items: center; gap: 3px; }.unearned-star { color: var(--muted-foreground); }
+.game-button { border-radius: 9px; box-shadow: var(--game-button-shadow); font-weight: 700; transition: transform .18s,background .18s; }.game-button:active { transform: translateY(3px); box-shadow: 0 2px 0 var(--coral-hover); }.island-enter { width: 100%; height: 34px; font-size: 12px; }
+.adventure-mission { display: flex; align-items: center; gap: 30px; padding: 21px 26px; background: var(--game-paper); border: 2px solid var(--card); border-radius: 14px; box-shadow: var(--game-shadow); }
+.mission-title { display: flex; align-items: center; gap: 12px; flex: 1; }.mission-title > svg { color: var(--success); }.mission-title span { font-size: 10px; opacity: .7; }.mission-title h2 { font-family: var(--font-sans); font-size: 18px; font-weight: 700; margin-top: 4px; }
+.adventure-mission ul { display: flex; flex-direction: column; gap: 7px; flex: 1; font-size: 12px; }.adventure-mission li { display: flex; align-items: center; gap: 7px; }.adventure-mission li svg { width: 14px; height: 14px; color: var(--success); }
+.mission-action { display: flex; align-items: center; gap: 18px; }.mission-action > span { display: flex; align-items: center; gap: 5px; font-size: 11px; }.mission-action .game-button { height: 48px; font-size: 17px; padding: 0 24px; }
+.adventure-footer { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 21px 2px 0; font-size: 10px; }.adventure-footer > div { display: flex; gap: 20px; flex-shrink: 0; font-size: 11px; }
+@media (min-width: 1500px) { .adventure-content { padding-top: 28px; }.island-art-link { margin-left: -13px; margin-right: -13px; } }
+@media (max-width: 1023px) { .adventure-content { padding: 20px 24px; }.adventure-intro { grid-template-columns: 1fr 1.2fr; gap: 20px; }.intro-note { display: none; }.game-title h1 { font-size: 36px; }.player-panel { grid-template-columns: 1.2fr 1fr; gap: 16px 24px; }.player-rewards { justify-content: flex-start; }.island-grid { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 28px 36px; max-width: 760px; margin: auto; }.island-magic,.island-final { padding-top: 0; }.adventure-trail { height: 85%; top: 8%; }.island-art-link { max-width: 290px; margin: auto; }.island-caption { margin: -5px 14px 0; }.adventure-mission { flex-wrap: wrap; gap: 20px; }.mission-action { width: 100%; justify-content: flex-end; }.adventure-footer { flex-direction: column-reverse; text-align: center; gap: 15px; } }
+@media (max-width: 540px) { .game-header > div { padding: 0 16px; min-height: 52px; }.game-header-brand { font-size: 13px; gap: 5px; }.game-header-brand span { display: none; }.game-header nav { gap: 12px; font-size: 10px; }.game-header nav svg { width: 14px; }.adventure-content { padding: 16px 14px; }.adventure-intro { display: flex; flex-direction: column-reverse; gap: 12px; }.game-title { width: min(300px,90%); padding: 12px 18px; }.game-title h1 { font-size: 36px; }.game-title p { font-size: 14px; }.explorer-welcome { align-self: flex-start; width: 100%; justify-content: center; }.explorer-welcome img { width: 86px; height: 93px; }.explorer-welcome div { font-size: 12px; gap: 4px; }.explorer-welcome strong { font-size: 10px; padding: 4px 8px; }.player-panel { margin-top: 7px; padding: 13px; gap: 14px; grid-template-columns: 1fr 1fr; }.player-inputs { grid-column: 1 / -1; }.player-track { grid-column: 1 / -1; }.player-rewards { gap: 5px; }.player-rewards svg { width: 22px; }.player-rewards strong { font-size: 18px; }.reward-divider { margin: 0 2px; }.map-heading { padding-top: 22px; }.map-heading h2 { font-size: 16px; }.map-heading > span { font-size: 9px; }.island-grid { gap: 26px 10px; padding-top: 22px; }.island-art-link { margin: 0 -6px; }.island-caption { margin: -3px 0 0; padding: 18px 7px 12px; }.island-caption h3 { font-size: 14px; }.island-caption p { font-size: 9px; }.island-meta { flex-direction: column; gap: 4px; margin: 8px 0 10px; }.island-enter { font-size: 11px; gap: 4px; }.island-enter svg { width: 13px; }.adventure-mission { padding: 18px; display: block; }.mission-title { margin-bottom: 15px; }.mission-title h2 { font-size: 18px; }.adventure-mission ul { font-size: 12px; }.mission-action { margin-top: 20px; gap: 12px; justify-content: space-between; }.mission-action .game-button { font-size: 15px; padding: 0 18px; }.mission-action > span { font-size: 10px; }.adventure-footer > span { line-height: 1.7; } }
+@media (prefers-reduced-motion: reduce) { .island-art,.game-button,.quest-progress > span { transition: none; }.island-art-link:hover .island-art { transform: none; } }
