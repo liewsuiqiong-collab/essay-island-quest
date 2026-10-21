@@ -195,6 +195,7 @@ function Editor({ initial, onBack }: { initial: Essay; onBack: () => void }) {
                 </div>
                 {hints.length > 0 && <Feedback kind="hint"><div className="mb-1 font-semibold">修改方向（规则式提醒）：</div><ul className="list-disc pl-4">{hints.map((t) => <li key={t}>{t}</li>)}</ul></Feedback>}
                 <div className="flex flex-wrap gap-2"><button className="btn btn-ghost" onClick={() => save("修改稿已保存。")}>💾 保存修改稿</button><button className="btn btn-sun" onClick={submitRevision}>📤 提交修改稿</button><button className="btn btn-primary" onClick={() => go(5)}>写反思 →</button></div>
+                <ModelEssays promptId={e.promptId} />
               </>
             )}
           </div>
@@ -206,6 +207,7 @@ function Editor({ initial, onBack }: { initial: Essay; onBack: () => void }) {
             <ul className="list-disc pl-5 text-sm text-muted-foreground"><li>这次我主要修改了哪里？为什么？</li><li>我觉得写得最好的一段是哪段？</li><li>下次写作我要特别注意什么？</li></ul>
             <textarea className="field min-h-40" value={e.reflection} onChange={(ev) => up({ reflection: ev.target.value })} />
             <div className="flex gap-2"><button className="btn btn-sun" onClick={submitReflection}>保存反思</button><Link to="/portfolio" className="btn btn-ghost">查看作品集</Link></div>
+            <ModelEssays promptId={e.promptId} />
           </div>
         )}
         {msg && <Feedback kind={msg.k}>{msg.t}</Feedback>}
