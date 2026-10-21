@@ -216,3 +216,23 @@ function Editor({ initial, onBack }: { initial: Essay; onBack: () => void }) {
     </div>
   );
 }
+
+/* 提交初稿后解锁的参考范文：供修改稿与反思阶段对照学习 */
+function ModelEssays({ promptId }: { promptId: string }) {
+  const essays = MODEL_ESSAYS[promptId];
+  if (!essays?.length) return null;
+  return (
+    <div className="space-y-3 border-t pt-4">
+      <div>
+        <h4 className="font-semibold">📖 参考范文（写完初稿后解锁）</h4>
+        <p className="text-xs text-muted-foreground">范文只供学习参考：读一读别人怎么写事情经过和感受，再想想自己的文章哪里可以写得更好，请不要照抄。</p>
+      </div>
+      {essays.map((m, i) => (
+        <details key={m.author} className="rounded-xl border bg-muted/40">
+          <summary className="cursor-pointer select-none px-4 py-3 font-medium">范文{i + 1}（{m.author}作品）</summary>
+          <div className="whitespace-pre-wrap px-4 pb-4 leading-relaxed">{m.text}</div>
+        </details>
+      ))}
+    </div>
+  );
+}
