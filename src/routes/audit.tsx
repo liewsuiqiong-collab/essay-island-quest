@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Feedback, PageHead, Progress } from "@/components/kit";
-import { AUDIT_CASES, type AuditCase } from "@/lib/content";
+import { AUDIT_CASES, BUILTIN_PROMPTS, type AuditCase } from "@/lib/content";
 import { award, giveBadge, recordWrong, setStationScore } from "@/lib/store";
 
 export const Route = createFileRoute("/audit")({
@@ -21,10 +21,10 @@ function AuditPage() {
   const c = AUDIT_CASES.find((x) => x.id === caseId)!;
   return (
     <div>
-      <PageHead icon="🔍" title="审题侦探" desc="像侦探一样拆解题目：关键词、人物、事件、要求，再判断构思是否切题。" />
+      <PageHead icon="🔍" title="审题侦探" desc="拆解作文终极挑战的三道题（Q3、Q4、Q5）：关键词、人物、事件、要求，再判断构思是否切题。" />
       <div className="mb-4 flex flex-wrap gap-2">
         {AUDIT_CASES.map((x, i) => (
-          <button key={x.id} onClick={() => setCaseId(x.id)} className={`chip ${x.id === caseId ? "border-primary bg-sky-soft font-semibold text-primary" : ""}`}>案件 {i + 1}：{x.id === "a-embarrass" ? "记叙文" : "观点题"}</button>
+          <button key={x.id} onClick={() => setCaseId(x.id)} className={`chip ${x.id === caseId ? "border-primary bg-sky-soft font-semibold text-primary" : ""}`}>案件 {i + 1}：{BUILTIN_PROMPTS.find((p) => p.id === x.promptId)?.label}</button>
         ))}
       </div>
       <CaseRunner key={c.id} c={c} />
@@ -44,7 +44,7 @@ function CaseRunner({ c }: { c: AuditCase }) {
     if (idx + 1 >= total) {
       setFinished(true);
       setStationScore("audit", (newScore / total) * 20);
-      award(`audit-${c.id}`, 40, `审题侦探：完成「${c.id === "a-embarrass" ? "比赛尴尬事" : "表达爱"}」案件`, "审题");
+      award(`audit-${c.id}`, 40, `审题侦探：完成「${BUILTIN_PROMPTS.find((p) => p.id === c.promptId)?.label}」案件`, "审题");
       giveBadge("audit");
     } else setIdx(idx + 1);
   };

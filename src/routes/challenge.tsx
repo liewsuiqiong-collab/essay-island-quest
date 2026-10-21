@@ -36,7 +36,8 @@ function ChallengePage() {
     <div>
       <PageHead icon="🏆" title="作文终极挑战" desc="独立完成一篇作文：审题 → 构思 → 初稿 → 自查 → 修改 → 反思。按完成度计分，满分 20 分。" />
       <Feedback kind="info">💾 草稿会自动保存在这台设备的浏览器里；刷新或换设备可能丢失进度。写完后请到「学习报告」生成 PDF，再自行上传到 Google Classroom 提交。</Feedback>
-      <h2 className="mb-3 text-xl">选择题目开始</h2>
+      <h2 className="mb-1 text-xl">三道题任选一道完成</h2>
+      <p className="mb-3 text-sm text-muted-foreground">只需选择你最有把握的一道题写完整篇作文即可。</p>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {prompts.map((p) => (
           <div key={p.id} className="card flex flex-col p-5">
@@ -47,7 +48,7 @@ function ChallengePage() {
               {p.custom && <span className="rounded-full bg-sun-soft px-2 py-0.5">老师新增</span>}
             </div>
             <p className="mt-3 flex-1 leading-relaxed">{p.title}</p>
-            <p className="mt-2 text-xs text-muted-foreground">📖 提交初稿并完成自我检查后，可到「范文学习馆」解锁本题范文</p>
+            <p className="mt-2 text-xs text-muted-foreground">📖 写作前可先到「范文学习馆」读本题范文，学方法、不照抄</p>
             <button className="btn btn-primary mt-4" onClick={() => { const e = newEssay(p); upsertEssay(e); navigate({ search: { essay: e.id } }); }}>开始挑战</button>
           </div>
         ))}
